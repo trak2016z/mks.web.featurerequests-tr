@@ -63,6 +63,14 @@ namespace MKS.Web.FeatureRequests
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
+            //run migrations on app start in debug mode
+            //in release you should deploy the whole db
+            //or apply migrations manually through CLI or SQL scripts
+            using (var scope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+            {
+                scope.ServiceProvider.GetRequiredService<FeatureRequestsDbContext>().Database.Migrate();
+            }
+
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
@@ -76,7 +84,7 @@ namespace MKS.Web.FeatureRequests
                 AuthenticationScheme = "oidc",
                 SignInScheme = "Cookies",
 
-                Authority = "http://localhost:5000",
+                Authority = Configuration["AuthUrl"],
                 RequireHttpsMetadata = false,
 
                 ClientId = "MKS.Web.MVC.FeatureRequests",

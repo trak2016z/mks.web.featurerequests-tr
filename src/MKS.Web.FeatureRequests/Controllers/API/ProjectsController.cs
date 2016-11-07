@@ -6,11 +6,11 @@ using Microsoft.AspNetCore.Mvc;
 using MKS.Web.Data.FeatureRequests.Repository;
 using MKS.Web.Data.FeatureRequests.Model;
 using Microsoft.AspNetCore.Authorization;
-using MKS.Web.API.FeatureRequests.Model.DTO;
+using MKS.Web.FeatureRequests.Model.DTO;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
-namespace MKS.Web.API.FeatureRequests.Controllers
+namespace MKS.Web.FeatureRequests.Controllers
 {
     /// <summary>
     /// Manages projects.

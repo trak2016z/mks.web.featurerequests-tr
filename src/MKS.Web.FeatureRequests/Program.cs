@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Builder;
 
-namespace MKS.Web.API.FeatureRequests
+namespace MKS.Web.FeatureRequests
 {
     public class Program
     {

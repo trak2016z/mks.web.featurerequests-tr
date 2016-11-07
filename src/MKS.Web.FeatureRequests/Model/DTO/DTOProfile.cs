@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace MKS.Web.API.FeatureRequests.Model.DTO
+namespace MKS.Web.FeatureRequests.Model.DTO
 {
     /// <summary>
     /// Configures mappings between entities and transfer objects.

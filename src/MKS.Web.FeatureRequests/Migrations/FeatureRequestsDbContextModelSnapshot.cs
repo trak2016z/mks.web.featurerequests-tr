@@ -5,13 +5,12 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using MKS.Web.Data.FeatureRequests;
 
-namespace MKS.Web.API.FeatureRequests.Migrations
+namespace MKS.Web.FeatureRequests.Migrations
 {
     [DbContext(typeof(FeatureRequestsDbContext))]
-    [Migration("20161106194615_Initial")]
-    partial class Initial
+    partial class FeatureRequestsDbContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.0.1")

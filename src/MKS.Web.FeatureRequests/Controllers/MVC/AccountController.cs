@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace MKS.Web.API.FeatureRequests.Controllers.MVC
+namespace MKS.Web.FeatureRequests.Controllers.MVC
 {
     public class AccountController : Controller
     {

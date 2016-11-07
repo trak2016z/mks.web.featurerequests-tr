@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace MKS.Web.API.FeatureRequests.Model.DTO
+namespace MKS.Web.FeatureRequests.Model.DTO
 {
     public class ProjectDTO
     {

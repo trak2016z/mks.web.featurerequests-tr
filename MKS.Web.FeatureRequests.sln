@@ -10,7 +10,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		global.json = global.json
 	EndProjectSection
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "MKS.Web.API.FeatureRequests", "src\MKS.Web.API.FeatureRequests\MKS.Web.API.FeatureRequests.xproj", "{C9F4C3F3-06D5-4512-84F9-D1FD19D27D25}"
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "MKS.Web.FeatureRequests", "src\MKS.Web.FeatureRequests\MKS.Web.FeatureRequests.xproj", "{C9F4C3F3-06D5-4512-84F9-D1FD19D27D25}"
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "MKS.Web.Data.FeatureRequests", "src\MKS.Web.Data.FeatureRequests\MKS.Web.Data.FeatureRequests.xproj", "{35BE5E84-0A50-428D-81F6-14298C71B029}"
 EndProject

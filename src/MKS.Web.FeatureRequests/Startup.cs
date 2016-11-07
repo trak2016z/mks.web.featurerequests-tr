@@ -14,7 +14,7 @@ using Swashbuckle.Swagger.Model;
 using MKS.Web.Data.FeatureRequests.Repository;
 using AutoMapper;
 
-namespace MKS.Web.API.FeatureRequests
+namespace MKS.Web.FeatureRequests
 {
     public class Startup
     {

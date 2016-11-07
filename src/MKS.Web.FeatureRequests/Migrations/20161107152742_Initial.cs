@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore.Migrations;
-using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace MKS.Web.FeatureRequests.Migrations
 {
@@ -25,7 +24,7 @@ namespace MKS.Web.FeatureRequests.Migrations
                 columns: table => new
                 {
                     Id = table.Column<long>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("Npgsql:ValueGeneratedOnAdd", true),
                     Content = table.Column<string>(nullable: true),
                     CreatedAtUtc = table.Column<DateTime>(nullable: false),
                     CreatedById = table.Column<string>(nullable: false),
@@ -49,7 +48,7 @@ namespace MKS.Web.FeatureRequests.Migrations
                 columns: table => new
                 {
                     Id = table.Column<long>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("Npgsql:ValueGeneratedOnAdd", true),
                     CommentId = table.Column<long>(nullable: false),
                     CreatedAtUtc = table.Column<DateTime>(nullable: false),
                     CreatedById = table.Column<string>(nullable: false)
@@ -70,7 +69,7 @@ namespace MKS.Web.FeatureRequests.Migrations
                 columns: table => new
                 {
                     Id = table.Column<long>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("Npgsql:ValueGeneratedOnAdd", true),
                     CreatedAtUtc = table.Column<DateTime>(nullable: false),
                     CreatedById = table.Column<string>(nullable: false),
                     Description = table.Column<string>(nullable: true),
@@ -94,7 +93,7 @@ namespace MKS.Web.FeatureRequests.Migrations
                 columns: table => new
                 {
                     Id = table.Column<long>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("Npgsql:ValueGeneratedOnAdd", true),
                     CreatedAtUtc = table.Column<DateTime>(nullable: false),
                     CreatedById = table.Column<string>(nullable: false),
                     Description = table.Column<string>(nullable: true),
@@ -116,7 +115,7 @@ namespace MKS.Web.FeatureRequests.Migrations
                 columns: table => new
                 {
                     Id = table.Column<long>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("Npgsql:ValueGeneratedOnAdd", true),
                     CreatedAtUtc = table.Column<DateTime>(nullable: false),
                     CreatedById = table.Column<string>(nullable: false),
                     FeatureRequestId = table.Column<long>(nullable: false)

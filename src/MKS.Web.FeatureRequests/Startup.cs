@@ -38,7 +38,7 @@ namespace MKS.Web.FeatureRequests
 
             // Add framework services.
             services.AddDbContext<FeatureRequestsDbContext>(options =>
-                options.UseSqlServer(connectionString, o => o.MigrationsAssembly(migrationsAssembly)));
+                options.UseNpgsql(connectionString, o => o.MigrationsAssembly(migrationsAssembly)));
 
             services.AddMvc();
             services.AddAutoMapper();

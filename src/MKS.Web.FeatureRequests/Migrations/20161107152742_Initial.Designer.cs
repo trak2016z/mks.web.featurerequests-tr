@@ -8,14 +8,13 @@ using MKS.Web.Data.FeatureRequests;
 namespace MKS.Web.FeatureRequests.Migrations
 {
     [DbContext(typeof(FeatureRequestsDbContext))]
-    [Migration("20161106194615_Initial")]
+    [Migration("20161107152742_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
-                .HasAnnotation("ProductVersion", "1.0.1")
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("ProductVersion", "1.0.1");
 
             modelBuilder.Entity("MKS.Web.Data.FeatureRequests.Model.Comment", b =>
                 {

@@ -13,6 +13,8 @@ using System.Reflection;
 using Swashbuckle.Swagger.Model;
 using MKS.Web.Data.FeatureRequests.Repository;
 using AutoMapper;
+using System.IdentityModel.Tokens.Jwt;
+using IdentityModel;
 
 namespace MKS.Web.FeatureRequests
 {
@@ -79,17 +81,30 @@ namespace MKS.Web.FeatureRequests
                 AuthenticationScheme = "Cookies"
             });
 
-            app.UseOpenIdConnectAuthentication(new OpenIdConnectOptions
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+
+            var openIdOpts = new OpenIdConnectOptions
             {
                 AuthenticationScheme = "oidc",
                 SignInScheme = "Cookies",
 
                 Authority = Configuration["AuthUrl"],
-                RequireHttpsMetadata = false,
+                RequireHttpsMetadata = false,                                   //TODO: enable in prod
 
                 ClientId = "MKS.Web.MVC.FeatureRequests",
-                SaveTokens = true
-            });
+                SaveTokens = true,
+                GetClaimsFromUserInfoEndpoint = true,
+
+                Scope = { "openid", "profile", "roles" },
+
+                TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters()
+                {
+                    RoleClaimType = JwtClaimTypes.Role,
+                    NameClaimType = JwtClaimTypes.Name
+                }
+            };
+
+            app.UseOpenIdConnectAuthentication(openIdOpts);
 
             app.UseStaticFiles();
             app.UseMvcWithDefaultRoute();

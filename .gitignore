@@ -240,6 +240,3 @@ ModelManifest.xml
 
 # FAKE - F# Make
 .fake/
-
-# Frontend libs, will be pulled from npm
-**/wwwroot/lib/

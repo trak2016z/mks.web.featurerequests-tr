@@ -1,4 +1,7 @@
 ﻿{
+  "title": "FeatureRequests Web App",
+  "copyright": "M.K. Sondej",
+  "language": "en",
   "dependencies": {
     "Microsoft.NETCore.App": {
       "version": "1.0.1",
@@ -28,7 +31,9 @@
     "AutoMapper.Extensions.Microsoft.DependencyInjection": "1.1.2",
     "Microsoft.AspNetCore.Authentication.Cookies": "1.0.0",
     "Microsoft.AspNetCore.Authentication.OpenIdConnect": "1.0.0",
-    "Npgsql.EntityFrameworkCore.PostgreSQL": "1.0.2"
+    "Npgsql.EntityFrameworkCore.PostgreSQL": "1.0.2",
+    "MKS.Web.Common": "1.0.0-*",
+    "BootstrapMvc.Bootstrap3Mvc6": "2.4.0"
   },
 
   "tools": {

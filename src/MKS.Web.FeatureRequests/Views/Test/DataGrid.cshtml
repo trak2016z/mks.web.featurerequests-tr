@@ -1,0 +1,18 @@
+﻿@using MKS.Web.FeatureRequests.Model.MVC.Test
+@using MKS.Web.FeatureRequests.Components
+@using MKS.Web.FeatureRequests.Model.Components.DataGrid
+@model List<TestListItem>
+
+(@await Component.InvokeAsync(nameof(DataGrid), DataGridBuilder<TestListItem>.Create()
+    .Id("dupa")
+    .PageIndex(1)
+    .PageSize(10)
+    .CssClass("test")
+    .OrderBy(i => i.Name, MKS.Web.Data.FeatureRequests.Query.SortDirection.ASC)
+    .Columns(c =>
+    {
+        c.For(i => i.Name).Sortable();
+        c.For(i => i.Description);
+        c.For(i => i.Date);
+        c.Custom("TEST");
+    })))

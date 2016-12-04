@@ -1,0 +1,16 @@
+﻿@model MKS.Web.FeatureRequests.Model.MVC.Project.Project
+
+@using (var form = Bootstrap.BeginForm(FormType.Horizontal))
+{
+    @(form.GroupFor(m => m.Name, "Name")
+        .Control(Bootstrap.Input().Placeholder("name")))
+
+    @(form.GroupFor(m => m.Description, "Description")
+        .Control(Bootstrap.Input().Placeholder("description")))
+
+    using (form.Group().BeginContent())
+    {
+        @Bootstrap.Button(ButtonType.SuccessGreen, "Save")
+        @Bootstrap.Button(ButtonType.DefaultGray, "Cancel").Href(Url.Action("List"))
+    }
+}

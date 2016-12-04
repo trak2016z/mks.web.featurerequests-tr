@@ -17,12 +17,12 @@ namespace MKS.Web.FeatureRequests.Controllers
     /// </summary>
     [Authorize]
     [Route("api/projects")]
-    public class ProjectsController : Controller
+    public class ProjectsApiController : Controller
     {
         private readonly ProjectsRepository _projects;
         private readonly IMapper _mapper;
 
-        public ProjectsController(ProjectsRepository projects, IMapper mapper)
+        public ProjectsApiController(ProjectsRepository projects, IMapper mapper)
         {
             _projects = projects;
             _mapper = mapper;

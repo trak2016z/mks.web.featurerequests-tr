@@ -1,0 +1,32 @@
+﻿@model MKS.Web.FeatureRequests.Model.Components.DataGridModel
+
+<table id="@Html.IdForModel()" class="table table-striped">
+    <thead>
+        <tr>
+            @foreach (var column in Model.Columns)
+            {
+                //TODO: fancy arrows
+                <th>@column.Name</th>
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Items)
+        {
+            <tr>
+                @foreach (var column in Model.Columns)
+                {
+                    <td>
+                        @column.GetValue(item)
+                    </td>
+                }
+            </tr>
+        }
+    </tbody>
+    <tfoot>
+
+    </tfoot>
+</table>
+
+<script>
+</script>

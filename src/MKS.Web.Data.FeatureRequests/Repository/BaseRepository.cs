@@ -1,5 +1,6 @@
 ﻿using MKS.Web.Data.FeatureRequests.Model.Interfaces;
 using MKS.Web.Data.FeatureRequests.Query;
+using MKS.Web.Data.FeatureRequests.Repository.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MKS.Web.Data.FeatureRequests.Repository
 {
-    public class BaseRepository<T> where T : class, IEntity, new()
+    public abstract class BaseRepository<T> : IRepository<T> where T : class, IEntity, new()
     {
         protected readonly FeatureRequestsDbContext _db;
 
@@ -29,12 +30,21 @@ namespace MKS.Web.Data.FeatureRequests.Repository
         /// </summary>
         public List<T> GetList(IDataRequest<T> request)
         {
+            return GetListQueryable(request).ToList();
+        }
+
+        /// <summary>
+        /// Gets a specified page of objects matching specific criteria
+        /// as queryable for further processing in other repository methods.
+        /// </summary>
+        protected IQueryable<T> GetListQueryable(IDataRequest<T> request)
+        {
             IQueryable<T> q = _db.Set<T>();
 
-            if(request.Where != null)
+            if (request.Where != null)
                 q = q.Where(request.Where);
 
-            if(request.OrderBy != null)
+            if (request.OrderBy != null)
             {
                 if (request.Direction == SortDirection.ASC)
                     q = q.OrderBy(request.OrderBy);
@@ -48,8 +58,7 @@ namespace MKS.Web.Data.FeatureRequests.Repository
             }
 
             return q.Skip((request.PageIndex - 1) * request.PageSize)
-                .Take(request.PageSize)
-                .ToList();
+                .Take(request.PageSize);
         }
 
         /// <summary>

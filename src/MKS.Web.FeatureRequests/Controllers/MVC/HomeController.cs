@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace MKS.Web.FeatureRequests.Controllers.MVC
 {
+    [Authorize()]
     public class HomeController : Controller
     {
         // GET: /<controller>/

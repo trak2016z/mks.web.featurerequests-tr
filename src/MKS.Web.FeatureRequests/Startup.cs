@@ -60,6 +60,11 @@ namespace MKS.Web.FeatureRequests
                 options.IncludeXmlComments(pathToDoc);
                 options.DescribeAllEnumsAsStrings();
             });
+
+            // bootstrap html helpers
+            // https://github.com/justdmitry/BootstrapMvc
+            services.AddTransient(typeof(BootstrapMvc.Mvc6.BootstrapHelper<>));
+            ConfigureRepositories(services);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

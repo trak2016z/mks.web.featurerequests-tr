@@ -1,16 +1,19 @@
-﻿@model MKS.Web.FeatureRequests.Model.Components.DataGridModel
+﻿@using MKS.Web.Common.ResourceManager
+@inject IResourceManager resourceManager
+@model MKS.Web.FeatureRequests.Model.Components.DataGridModel
 
-<table id="@Html.IdForModel()" class="table table-striped">
+<table id="@Html.Id(Model.Id)" class="table table-striped">
     <thead>
-        <tr>
-            @foreach (var column in Model.Columns)
-            {
-                //TODO: fancy arrows
-                <th>@column.Name</th>
-            }
+        <tr data-bind="foreach: Columns">
+            <th data-bind="Name">
+
+            </th>
         </tr>
     </thead>
-    <tbody>
+    <tbody data-bind="foreach: Items">
+        <tr>
+            <td></td>
+        </tr>
         @foreach (var item in Model.Items)
         {
             <tr>
@@ -24,9 +27,38 @@
         }
     </tbody>
     <tfoot>
+        <tr>
+            <td colspan="@Model.Columns.Count">
+                <nav>
+                    <ul class="pagination">
+                        <li>
+                            <a href="#" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
 
+                        <li><a href="#">1</a></li>
+                        <li><a href="#">2</a></li>
+                        <li><a href="#">3</a></li>
+                        <li><a href="#">4</a></li>
+                        <li><a href="#">5</a></li>
+                        <li>
+                            <a href="#" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </td>
+        </tr>
     </tfoot>
 </table>
 
-<script>
+<script resource="resource">
+    $(document).ready(function () {
+        ko.applyBindings({
+            Items: ko.mapping.fromJSON('@Json.Serialize(Model.Items)'),
+            Columns: ko.mapping.fromJSON('@Json.Serialize(Model.Columns.Select(c => c.Name))')
+        });
+    });
 </script>

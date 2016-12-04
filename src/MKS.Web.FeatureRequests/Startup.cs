@@ -15,6 +15,7 @@ using MKS.Web.Data.FeatureRequests.Repository;
 using AutoMapper;
 using System.IdentityModel.Tokens.Jwt;
 using IdentityModel;
+using MKS.Web.Common.ResourceManager;
 
 namespace MKS.Web.FeatureRequests
 {
@@ -65,6 +66,7 @@ namespace MKS.Web.FeatureRequests
             // https://github.com/justdmitry/BootstrapMvc
             services.AddTransient(typeof(BootstrapMvc.Mvc6.BootstrapHelper<>));
             ConfigureRepositories(services);
+            services.AddSingleton<IResourceManager, ResourceManager>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

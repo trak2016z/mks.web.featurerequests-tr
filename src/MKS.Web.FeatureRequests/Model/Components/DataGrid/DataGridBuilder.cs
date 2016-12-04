@@ -56,7 +56,6 @@ namespace MKS.Web.FeatureRequests.Model.Components.DataGrid
             _cssClass = cssClass;
             return this;
         }
-
         /// <summary>
         /// Source to fetch data from if grid is dynamic.
         /// </summary>
@@ -67,7 +66,6 @@ namespace MKS.Web.FeatureRequests.Model.Components.DataGrid
             _sourceUrl = url;
             return this;
         }
-
         /// <summary>
         /// Initial data to display or complete data set if grid is static.
         /// Paging is still available, just done fully client-side.
@@ -81,11 +79,20 @@ namespace MKS.Web.FeatureRequests.Model.Components.DataGrid
             _totalCount = totalCount;
             return this;
         }
-
         public DataGridBuilder<TItem> OrderBy(Expression<Func<TItem, object>> property, SortDirection direction)
         {
             _orderBy = ExpressionHelper.GetMemberName(property);
             _orderDirection = direction;
+            return this;
+        }
+        public DataGridBuilder<TItem> Items(IEnumerable<TItem> items)
+        {
+            _items = items.Cast<object>().ToList();
+            return this;
+        }
+        public DataGridBuilder<TItem> TotalCount(int totalCount)
+        {
+            _totalCount = totalCount;
             return this;
         }
 

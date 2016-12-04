@@ -5,6 +5,8 @@
 
 (@await Component.InvokeAsync(nameof(DataGrid), DataGridBuilder<TestListItem>.Create()
     .Id("dupa")
+    .Items(Model)
+    .TotalCount(Model.Count)
     .PageIndex(1)
     .PageSize(10)
     .CssClass("test")
@@ -15,4 +17,4 @@
         c.For(i => i.Description);
         c.For(i => i.Date);
         c.Custom("TEST");
-    })))
+    }).Build()))

@@ -85,9 +85,8 @@ namespace MKS.Web.FeatureRequests.Components
         }
         
 
-        public IViewComponentResult Invoke<T>(DataGridBuilder<T> builder) where T : class, new()
+        public IViewComponentResult Invoke(DataGridModel model)
         {
-            var model = builder.Build();
             return View(model);
         }
     }

@@ -8,13 +8,14 @@ using MKS.Web.Data.FeatureRequests;
 namespace MKS.Web.FeatureRequests.Migrations
 {
     [DbContext(typeof(FeatureRequestsDbContext))]
-    [Migration("20161107152742_Initial")]
+    [Migration("20161204224341_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
-                .HasAnnotation("ProductVersion", "1.0.1");
+                .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn)
+                .HasAnnotation("ProductVersion", "1.1.0-rtm-22752");
 
             modelBuilder.Entity("MKS.Web.Data.FeatureRequests.Model.Comment", b =>
                 {
@@ -108,11 +109,12 @@ namespace MKS.Web.FeatureRequests.Migrations
 
             modelBuilder.Entity("MKS.Web.Data.FeatureRequests.Model.User", b =>
                 {
-                    b.Property<string>("Id");
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd();
 
                     b.HasKey("Id");
 
-                    b.ToTable("User");
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("MKS.Web.Data.FeatureRequests.Model.Vote", b =>

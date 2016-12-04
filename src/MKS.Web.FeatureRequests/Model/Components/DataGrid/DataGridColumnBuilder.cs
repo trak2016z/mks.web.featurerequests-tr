@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MKS.Web.Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -10,24 +11,25 @@ namespace MKS.Web.FeatureRequests.Model.Components.DataGrid
     {
         #region Private fields
         //column value variants
-        private Func<object, object> _property;
-        private Func<object, string> _custom;
+        private string _propertyName;
         private string _value;
 
         private bool _isSortable;
         private Func<string, string> _formatFunc;
         private string _itemCssClass;
+        private string _name;
         #endregion
 
         #region Constructors
-        public DataGridColumnBuilder(Func<TItem, object> propertySelector)
+        public DataGridColumnBuilder(Expression<Func<TItem, object>> propertySelector)
         {
-            _property = i => propertySelector((TItem)i);
+            _propertyName = ExpressionHelper.GetMemberName<TItem, object>(propertySelector);
         }
 
         public DataGridColumnBuilder(Func<TItem, string> contentGetter)
         {
-            _custom = i => contentGetter((TItem)i);
+            //TODO: pass js function instead of lambda
+            throw new NotImplementedException();
         }
 
         public DataGridColumnBuilder(string staticValue)
@@ -45,13 +47,19 @@ namespace MKS.Web.FeatureRequests.Model.Components.DataGrid
 
         public DataGridColumnBuilder<TItem> Format(Func<string, string> format)
         {
-            _formatFunc = format;
-            return this;
+            //TODO: pass js format function
+            throw new NotImplementedException();
         }
 
         public DataGridColumnBuilder<TItem> CssClass(string cssClass)
         {
             _itemCssClass = cssClass;
+            return this;
+        }
+
+        public DataGridColumnBuilder<TItem> Name(string name)
+        {
+            _name = name;
             return this;
         }
 
@@ -63,10 +71,9 @@ namespace MKS.Web.FeatureRequests.Model.Components.DataGrid
         {
             return new DataGridColumn()
             {
-                PropertyGetter = _property,
-                CustomGetter = _custom,
+                Name = _name,
+                PropertyName = _propertyName,
                 StaticValue = _value,
-                Format = _formatFunc,
                 IsSortable = _isSortable
             };
         }

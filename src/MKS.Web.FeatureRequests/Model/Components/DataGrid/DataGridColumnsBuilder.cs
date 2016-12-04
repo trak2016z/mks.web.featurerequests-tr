@@ -15,7 +15,7 @@ namespace MKS.Web.FeatureRequests.Model.Components.DataGrid
         /// </summary>
         /// <param name="propertySelector"></param>
         /// <returns></returns>
-        public DataGridColumnBuilder<TItem> For(Func<TItem, object> propertySelector)
+        public DataGridColumnBuilder<TItem> For(Expression<Func<TItem, object>> propertySelector)
         {
             var builder = new DataGridColumnBuilder<TItem>(propertySelector);
             columnBuilders.Add(builder);

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace MKS.Web.FeatureRequests.Migrations
 {
@@ -9,14 +10,14 @@ namespace MKS.Web.FeatureRequests.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "User",
+                name: "Users",
                 columns: table => new
                 {
                     Id = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_User", x => x.Id);
+                    table.PrimaryKey("PK_Users", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -24,7 +25,7 @@ namespace MKS.Web.FeatureRequests.Migrations
                 columns: table => new
                 {
                     Id = table.Column<long>(nullable: false)
-                        .Annotation("Npgsql:ValueGeneratedOnAdd", true),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
                     Content = table.Column<string>(nullable: true),
                     CreatedAtUtc = table.Column<DateTime>(nullable: false),
                     CreatedById = table.Column<string>(nullable: false),
@@ -36,9 +37,9 @@ namespace MKS.Web.FeatureRequests.Migrations
                 {
                     table.PrimaryKey("PK_Comments", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Comments_User_CreatedById",
+                        name: "FK_Comments_Users_CreatedById",
                         column: x => x.CreatedById,
-                        principalTable: "User",
+                        principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -48,7 +49,7 @@ namespace MKS.Web.FeatureRequests.Migrations
                 columns: table => new
                 {
                     Id = table.Column<long>(nullable: false)
-                        .Annotation("Npgsql:ValueGeneratedOnAdd", true),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
                     CommentId = table.Column<long>(nullable: false),
                     CreatedAtUtc = table.Column<DateTime>(nullable: false),
                     CreatedById = table.Column<string>(nullable: false)
@@ -57,9 +58,9 @@ namespace MKS.Web.FeatureRequests.Migrations
                 {
                     table.PrimaryKey("PK_CommentVotes", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_CommentVotes_User_CreatedById",
+                        name: "FK_CommentVotes_Users_CreatedById",
                         column: x => x.CreatedById,
-                        principalTable: "User",
+                        principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -69,7 +70,7 @@ namespace MKS.Web.FeatureRequests.Migrations
                 columns: table => new
                 {
                     Id = table.Column<long>(nullable: false)
-                        .Annotation("Npgsql:ValueGeneratedOnAdd", true),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
                     CreatedAtUtc = table.Column<DateTime>(nullable: false),
                     CreatedById = table.Column<string>(nullable: false),
                     Description = table.Column<string>(nullable: true),
@@ -81,9 +82,9 @@ namespace MKS.Web.FeatureRequests.Migrations
                 {
                     table.PrimaryKey("PK_FeatureRequests", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_FeatureRequests_User_CreatedById",
+                        name: "FK_FeatureRequests_Users_CreatedById",
                         column: x => x.CreatedById,
-                        principalTable: "User",
+                        principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -93,7 +94,7 @@ namespace MKS.Web.FeatureRequests.Migrations
                 columns: table => new
                 {
                     Id = table.Column<long>(nullable: false)
-                        .Annotation("Npgsql:ValueGeneratedOnAdd", true),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
                     CreatedAtUtc = table.Column<DateTime>(nullable: false),
                     CreatedById = table.Column<string>(nullable: false),
                     Description = table.Column<string>(nullable: true),
@@ -103,9 +104,9 @@ namespace MKS.Web.FeatureRequests.Migrations
                 {
                     table.PrimaryKey("PK_Projects", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Projects_User_CreatedById",
+                        name: "FK_Projects_Users_CreatedById",
                         column: x => x.CreatedById,
-                        principalTable: "User",
+                        principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -115,7 +116,7 @@ namespace MKS.Web.FeatureRequests.Migrations
                 columns: table => new
                 {
                     Id = table.Column<long>(nullable: false)
-                        .Annotation("Npgsql:ValueGeneratedOnAdd", true),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
                     CreatedAtUtc = table.Column<DateTime>(nullable: false),
                     CreatedById = table.Column<string>(nullable: false),
                     FeatureRequestId = table.Column<long>(nullable: false)
@@ -124,9 +125,9 @@ namespace MKS.Web.FeatureRequests.Migrations
                 {
                     table.PrimaryKey("PK_Votes", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Votes_User_CreatedById",
+                        name: "FK_Votes_Users_CreatedById",
                         column: x => x.CreatedById,
-                        principalTable: "User",
+                        principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -175,7 +176,7 @@ namespace MKS.Web.FeatureRequests.Migrations
                 name: "Votes");
 
             migrationBuilder.DropTable(
-                name: "User");
+                name: "Users");
         }
     }
 }

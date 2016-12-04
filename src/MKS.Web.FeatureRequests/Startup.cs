@@ -16,6 +16,7 @@ using AutoMapper;
 using System.IdentityModel.Tokens.Jwt;
 using IdentityModel;
 using MKS.Web.Common.ResourceManager;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 
 namespace MKS.Web.FeatureRequests
 {
@@ -66,7 +67,7 @@ namespace MKS.Web.FeatureRequests
             // https://github.com/justdmitry/BootstrapMvc
             services.AddTransient(typeof(BootstrapMvc.Mvc6.BootstrapHelper<>));
             ConfigureRepositories(services);
-            services.AddSingleton<IResourceManager, ResourceManager>();
+            services.AddScoped<IResourceManager, ResourceManager>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -108,7 +109,12 @@ namespace MKS.Web.FeatureRequests
                 {
                     RoleClaimType = JwtClaimTypes.Role,
                     NameClaimType = JwtClaimTypes.Name
-                }
+                },
+            };
+
+            openIdOpts.Events = new OpenIdConnectEvents()
+            {
+                OnTokenValidated = async context => await Startup.OnTokenValidated(app.ApplicationServices, context)
             };
 
             app.UseOpenIdConnectAuthentication(openIdOpts);
@@ -125,7 +131,18 @@ namespace MKS.Web.FeatureRequests
         /// </summary>
         private void ConfigureRepositories(IServiceCollection services)
         {
-            services.AddTransient<ProjectsRepository>();
+            services.AddScoped<ProjectsRepository>();
+            services.AddScoped<UserRepository>();
+        }
+
+        private static async Task OnTokenValidated(IServiceProvider serviceProvider, TokenValidatedContext context)
+        {
+            using (var serviceScope = serviceProvider.GetService<IServiceScopeFactory>().CreateScope())
+            {
+                var userRepository = serviceScope.ServiceProvider.GetRequiredService<UserRepository>();
+                var userId = context.Ticket.Principal.Claims.First(c => c.Type == JwtClaimTypes.Subject).Value;
+                await userRepository.EnsureRegisteredAsync(userId);
+            }
         }
     }
 }

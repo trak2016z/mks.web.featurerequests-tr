@@ -13,7 +13,8 @@ namespace MKS.Web.FeatureRequests.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
             modelBuilder
-                .HasAnnotation("ProductVersion", "1.0.1");
+                .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn)
+                .HasAnnotation("ProductVersion", "1.1.0-rtm-22752");
 
             modelBuilder.Entity("MKS.Web.Data.FeatureRequests.Model.Comment", b =>
                 {
@@ -107,11 +108,12 @@ namespace MKS.Web.FeatureRequests.Migrations
 
             modelBuilder.Entity("MKS.Web.Data.FeatureRequests.Model.User", b =>
                 {
-                    b.Property<string>("Id");
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd();
 
                     b.HasKey("Id");
 
-                    b.ToTable("User");
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("MKS.Web.Data.FeatureRequests.Model.Vote", b =>

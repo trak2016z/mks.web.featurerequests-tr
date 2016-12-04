@@ -14,6 +14,7 @@ namespace MKS.Web.Data.FeatureRequests
         public DbSet<FeatureRequest> FeatureRequests { get; set; }
         public DbSet<Project> Projects { get; set; }
         public DbSet<Vote> Votes { get; set; }
+        public DbSet<User> Users { get; set; }
 
         /// <summary>
         /// Allows specifying provider at the application level.

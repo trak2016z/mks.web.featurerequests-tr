@@ -19,7 +19,10 @@ namespace MKS.Web.Common
             var param = Expression.Parameter(typeof(T), "t");
 
             return Expression.Lambda<Func<T, object>>(
-                Expression.PropertyOrField(param, propertyName),
+                Expression.Convert(
+                    Expression.PropertyOrField(param, propertyName),
+                    typeof(object)
+                ),
                 param
             );
         }

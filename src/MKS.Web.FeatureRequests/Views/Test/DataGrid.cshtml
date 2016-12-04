@@ -3,7 +3,7 @@
 @using MKS.Web.FeatureRequests.Model.Components.DataGrid
 @model List<TestListItem>
 
-(@await Component.InvokeAsync(nameof(DataGrid), DataGridBuilder<TestListItem>.Create()
+@await Component.InvokeAsync(nameof(DataGrid), DataGridBuilder<TestListItem>.Create()
     .Id("dupa")
     .Items(Model)
     .TotalCount(Model.Count)
@@ -13,8 +13,8 @@
     .OrderBy(i => i.Name, MKS.Web.Data.FeatureRequests.Query.SortDirection.ASC)
     .Columns(c =>
     {
-        c.For(i => i.Name).Sortable();
-        c.For(i => i.Description);
-        c.For(i => i.Date);
-        c.Custom("TEST");
-    }).Build()))
+        c.For(i => i.Name).Name(nameof(TestListItem.Name)).Sortable();
+        c.For(i => i.Description).Name(nameof(TestListItem.Description));
+        c.For(i => i.Date).Name("Date");
+        c.Custom("TEST").Name("Test");
+    }).Build())

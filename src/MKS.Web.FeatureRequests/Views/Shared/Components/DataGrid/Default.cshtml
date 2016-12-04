@@ -5,27 +5,25 @@
 <table id="@Html.Id(Model.Id)" class="table table-striped">
     <thead>
         <tr data-bind="foreach: Columns">
-            <th data-bind="Name">
-
-            </th>
+            <th data-bind="text: $data"></th>
         </tr>
     </thead>
     <tbody data-bind="foreach: Items">
         <tr>
-            <td></td>
-        </tr>
-        @foreach (var item in Model.Items)
-        {
-            <tr>
-                @foreach (var column in Model.Columns)
+            @foreach (var column in Model.Columns)
+            {
+                if (column.PropertyName != null)
                 {
-                    <td>
-                        @column.GetValue(item)
-                    </td>
+                    <td data-bind="text: @column.PropertyName.ToLower()"></td>
                 }
-            </tr>
-        }
+                else
+                { 
+                    <td>@column.StaticValue</td>
+                }
+            }
+        </tr>
     </tbody>
+
     <tfoot>
         <tr>
             <td colspan="@Model.Columns.Count">
@@ -36,12 +34,11 @@
                                 <span aria-hidden="true">&laquo;</span>
                             </a>
                         </li>
-
-                        <li><a href="#">1</a></li>
-                        <li><a href="#">2</a></li>
-                        <li><a href="#">3</a></li>
-                        <li><a href="#">4</a></li>
-                        <li><a href="#">5</a></li>
+                        <!-- ko foreach: Pages -->
+                        <li data-bind="css: {'active': $data == $parent.PageIndex() }">
+                            <a href="#" data-bind="text: $data, click: $parent.PageIndex"></a>
+                        </li>
+                        <!-- /ko -->
                         <li>
                             <a href="#" aria-label="Next">
                                 <span aria-hidden="true">&raquo;</span>
@@ -56,9 +53,25 @@
 
 <script resource="resource">
     $(document).ready(function () {
-        ko.applyBindings({
+        var model = {
             Items: ko.mapping.fromJSON('@Json.Serialize(Model.Items)'),
-            Columns: ko.mapping.fromJSON('@Json.Serialize(Model.Columns.Select(c => c.Name))')
-        });
+            Columns: ko.mapping.fromJSON('@Json.Serialize(Model.Columns.Select(c => c.Name))'),
+            Properties: ko.mapping.fromJSON('@Json.Serialize(Model.Columns.Where(c => c.PropertyName != null).Select(c => c.PropertyName.ToLower()))'),
+            PageSize: ko.observable(@Model.PageSize),
+            TotalCount: ko.observable(123),
+            PageIndex: ko.observable(@Model.PageIndex),
+        };
+
+        model.Pages = ko.computed(function () {
+            var pages = this.TotalCount() / this.PageSize();
+            var arr = [];
+            for (var i = 1; i < pages; i++) {
+                arr.push(i);
+            }
+
+            return arr;
+        }, model)
+
+        ko.applyBindings(model, $('@Model.Id')[0]);
     });
 </script>

@@ -9,6 +9,8 @@ using MKS.Web.Data.FeatureRequests.Repository;
 using MKS.Web.Data.FeatureRequests.Query;
 using MKS.Web.FeatureRequests.Model.DataRequest;
 using MKS.Web.FeatureRequests.Model.Common;
+using System.Security.Claims;
+using MKS.Web.Common;
 
 // For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -33,17 +35,10 @@ namespace MKS.Web.FeatureRequests.Controllers.MVC
         {
             if (query == null) query = new DataRequestModel();
 
-            var data = _projects.GetSimpleList(query.ToDataRequest<Data.FeatureRequests.Model.Project>());
-            return View(new DataGridModel<ProjectListItem>());
-        }
-
-        
-        public IActionResult ListJson(DataRequestModel query)
-        {
-            if (query == null) query = new DataRequestModel();
-
-            var data = _projects.GetSimpleList(query.ToDataRequest<Data.FeatureRequests.Model.Project>());
-            return Json(new DataGridModel<ProjectListItem>());
+            var data = _projects.GetList(query.ToDataRequest<Data.FeatureRequests.Model.Project>())
+                .Select(p => new Project(p))
+                .ToList();
+            return View(data);
         }
 
         #region Create()
@@ -61,8 +56,8 @@ namespace MKS.Web.FeatureRequests.Controllers.MVC
                 {
                     Name = model.Name,
                     Description = model.Description,
-                    CreatedById = User.Identity.Name,
-                    CreatedAtUtc = model.CreatedAt.ToUniversalTime()
+                    CreatedById = IdentityHelper.GetUserId(User),
+                    CreatedAtUtc = DateTime.Now.ToUniversalTime()
                 });
 
                 return RedirectToAction(nameof(List));

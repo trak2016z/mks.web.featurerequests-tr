@@ -16,6 +16,9 @@ namespace MKS.Web.FeatureRequests.Model.DTO
         {
             CreateMap<Project, ProjectDTO>();
             CreateMap<ProjectDTO, Project>();
+
+            CreateMap<FeatureRequest, FeatureRequestDTO>();
+            CreateMap<FeatureRequestDTO, FeatureRequest>();
         }
     }
 }

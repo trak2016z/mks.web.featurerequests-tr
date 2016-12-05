@@ -20,7 +20,7 @@ namespace MKS.Web.Data.FeatureRequests.Repository
         /// <summary>
         /// Gets a single object by unique id.
         /// </summary>
-        public T GetById(long id)
+        public virtual T GetById(long id)
         {
             return _db.Set<T>().SingleOrDefault(e => e.Id == id);
         }
@@ -28,7 +28,7 @@ namespace MKS.Web.Data.FeatureRequests.Repository
         /// <summary>
         /// Gets a specified page of objects matching specific criteria.
         /// </summary>
-        public List<T> GetList(IDataRequest<T> request)
+        public virtual List<T> GetList(IDataRequest<T> request)
         {
             return GetListQueryable(request).ToList();
         }
@@ -37,7 +37,7 @@ namespace MKS.Web.Data.FeatureRequests.Repository
         /// Gets a specified page of objects matching specific criteria
         /// as queryable for further processing in other repository methods.
         /// </summary>
-        protected IQueryable<T> GetListQueryable(IDataRequest<T> request)
+        protected virtual IQueryable<T> GetListQueryable(IDataRequest<T> request)
         {
             IQueryable<T> q = _db.Set<T>();
 
@@ -64,18 +64,18 @@ namespace MKS.Web.Data.FeatureRequests.Repository
         /// <summary>
         /// Gets ALL entities stored.
         /// </summary>
-        public List<T> GetList()
+        public virtual List<T> GetList()
         {
             return _db.Set<T>().ToList();
         }
 
-        public void Add(T entity)
+        public virtual void Add(T entity)
         {
             _db.Add(entity);
             _db.SaveChanges();
         }
 
-        public void Update(T entity)
+        public virtual void Update(T entity)
         {
             _db.Update(entity);
             _db.SaveChanges();
@@ -89,7 +89,7 @@ namespace MKS.Web.Data.FeatureRequests.Repository
             _db.SaveChanges();
         }
 
-        public void Delete(long id)
+        public virtual void Delete(long id)
         {
             var entity = _db.Set<T>().SingleOrDefault(e => e.Id == id);
             if(entity != null)

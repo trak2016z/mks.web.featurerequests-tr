@@ -32,7 +32,6 @@ namespace MKS.Web.FeatureRequests.Controllers
         /// Get all projects.
         /// </summary>
         [HttpGet]
-        [AllowAnonymous]
         public IEnumerable<ProjectDTO> Get()
         {
             return _mapper.Map<List<ProjectDTO>>(_projects.GetList());
@@ -42,7 +41,6 @@ namespace MKS.Web.FeatureRequests.Controllers
         /// Get a single project by id.
         /// </summary>
         [HttpGet("{id}")]
-        [AllowAnonymous]
         [Produces(typeof(ProjectDTO))]
         public IActionResult Get(long id)
         {

@@ -1,0 +1,185 @@
+﻿@model MKS.Web.FeatureRequests.Model.MVC.Project.Project
+
+@{ 
+    ViewBag.Title = "Project feature requests";
+}
+
+<div class="row">
+    <h3>Project "@Model.Name"</h3>
+    <div class="form-horizontal">
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Name</label>
+            <div class="col-sm-10">
+                <p class="form-control-static">@Model.Name</p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Description</label>
+            <div class="col-sm-10">
+                <p class="form-control-static">@Model.Description</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="featureRequests">
+    <h3>All feature requests</h3>
+    <div class="row" data-bind="if: featureRequests">
+        <div data-bind="foreach: featureRequests"
+             class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+            <div class="panel panel-default">
+                <div class="panel-heading" role="tab" id="head">
+                    <h4 class="panel-title">
+                        <a role="button"
+                           data-toggle="collapse" 
+                           data-parent="#accordion"
+                           data-bind="attr: {'href': '#request-collapse-' + $index() }" 
+                           href="#">
+                            <span data-bind="text: name"></span>
+                            <span class="badge" data-bind="text: votes"></span>
+                        </a>
+                    </h4>
+                </div>
+                <div data-bind="attr: {'id': 'request-collapse-' + $index() }" class="panel-collapse collapse" role="tabpanel">
+                    <div class="panel-body" data-bind="text: description">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" data-bind="ifnot: anyItems">
+            <p>No requests yet! Be the first one to suggest a cool feature :)</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="panel-group" id="formAccordion" role="tablist" aria-multiselectable="true">
+            <div class="panel panel-default">
+                <div class="panel-heading" role="tab" id="head">
+                    <h4 class="panel-title">
+                        <a role="button"
+                           data-toggle="collapse"
+                           data-parent="#formAccordion"
+                           href="#formCollapse">
+                            Create a new feature request!
+                        </a>
+                    </h4>
+                </div>
+                <div id="formCollapse" class="panel-collapse collapse" role="tabpanel" data-bind="with: newRequest">
+                    <div class="panel-body clearfix">
+                        <form class="form-horizontal" data-bind="submit: submit">
+                            <div class="form-group" data-bind="validationElement: name">
+                                <label class="col-sm-2 control-label">Name</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" data-bind="textInput: name" />
+                                </div>
+                            </div>
+                            <div class="form-group" data-bind="validationElement: description">
+                                <label class="col-sm-2 control-label">Description</label>
+                                <div class="col-sm-10">
+                                    <textarea class="form-control" data-bind="textInput: description"></textarea>
+                                </div>
+                            </div>
+                            <button class="btn btn-success pull-right" type="submit">Submit</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script>
+        ko.validation.rules['nameUnique'] = {
+            async: true,
+            validator: function (val, parms, callback) {
+                var defaults = {
+                    url: '/api/featurerequests/isnameavailable',
+                    type: 'POST',
+                    data: JSON.stringify(val),
+                    contentType: 'application/json',
+                    success: function (data) {
+                        callback(data);
+                    }
+                };
+
+                var options = $.extend(defaults, parms);
+                $.ajax(options);
+            },
+            message: 'Request with this name already exists.'
+        };
+        ko.validation.registerExtenders();
+
+        $(document).ready(function () {
+
+            var viewModel = {
+                featureRequests: ko.observableArray([]),
+
+                refreshRequests: function () {
+                    var vm = this;
+                    $.getJSON(
+                        '/api/featurerequests/' + @Model.Id,
+                        function (data) {
+                            vm.featureRequests(data);
+                        }
+                    );
+                },
+
+                newRequest: ko.validatedObservable({
+                    name: ko.observable('').extend({
+                        required: true,
+                        nameUnique: true
+                    }),
+                    description: ko.observable('').extend({
+                        required: true
+                    }),
+
+                    submit: function() {
+                        if (!this.isValid()) {
+                            this.errors.showAllMessages();
+                        } else {
+                            var vm = this();
+                            var model = {
+                                name: vm.name(),
+                                description: vm.description()
+                            };
+
+                            $.ajax({
+                                url: '/api/featurerequests/' + @Model.Id,
+                                method: 'POST',
+                                data: JSON.stringify(model),
+                                contentType: 'application/json',
+                                success: function(data) {
+                                    viewModel.refreshRequests();
+                                    vm.clear();
+                                }
+                            })
+                        }
+                    },
+
+                    clear: function() {
+                        var current = this();
+                        current.name('');
+                        current.name.clearError();
+                        current.description('');
+                        current.description.clearError();
+                    }
+                }),
+            };
+
+            viewModel.refreshRequests = viewModel.refreshRequests.bind(viewModel);
+            viewModel.newRequest().submit = viewModel.newRequest().submit.bind(viewModel.newRequest);
+            viewModel.newRequest().clear = viewModel.newRequest().clear.bind(viewModel.newRequest);
+
+            viewModel.anyItems = ko.computed(function () {
+                return this.featureRequests().length > 0;
+            }, viewModel);
+
+            ko.applyBindings(viewModel, $("#featureRequests")[0]);
+
+            viewModel.refreshRequests();
+        })
+    </script>
+}
+

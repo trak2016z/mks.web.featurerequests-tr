@@ -1,5 +1,9 @@
 ﻿@model MKS.Web.FeatureRequests.Model.MVC.Project.Project
 
+@{ 
+    ViewBag.Title = Model.Id != 0 ? "Edit project" : "New project";
+}
+
 <div class="row">
     @using (var form = Bootstrap.BeginForm(FormType.Horizontal))
     {
@@ -7,7 +11,7 @@
             .Control(Bootstrap.Input().Placeholder("name")))
 
         @(form.GroupFor(m => m.Description, "Description")
-            .Control(Bootstrap.Input().Placeholder("description")))
+            .Control(Bootstrap.Textarea().Placeholder("description")))
 
         using (form.Group().BeginContent())
         {

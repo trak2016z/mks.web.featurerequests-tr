@@ -1,4 +1,9 @@
-﻿@model List<MKS.Web.FeatureRequests.Model.MVC.Project.Project>
+﻿@using MKS.Web.FeatureRequests.Controllers.MVC
+@model List<MKS.Web.FeatureRequests.Model.MVC.Project.Project>
+
+@{ 
+    ViewBag.Title = "List projects";
+}
 
 <div class="row">
     @if (!Model.Any())
@@ -16,10 +21,22 @@
                 <div class="panel-body">
                     @item.Description
                 </div>
-                <div class="panel-footer pull-right">
-                    <a class="btn btn-default" href='@Url.Action("View")'>Open</a>
+                <div class="panel-footer clearfix">
+                    <div class="pull-right">
+                        @if (User.IsInRole(MKS.Web.FeatureRequests.Model.Constants.RoleNames.Superadministrator))
+                        {
+                            <a class="btn btn-warning" href='@Url.Action(nameof(ProjectsController.Edit), new { id = item.Id })'>Edit</a>
+                        }
+                        <a class="btn btn-success" href='@Url.Action(nameof(ProjectsController.View), new { id = item.Id })'>Feature requests</a>
+                    </div>
                 </div>
             </div>
         }
+    }
+</div>
+<div class="row">
+    @if (User.IsInRole(MKS.Web.FeatureRequests.Model.Constants.RoleNames.Superadministrator))
+    {
+        <a class="btn btn-success" href="@Url.Action("Create", "Projects")">Create new project</a>
     }
 </div>

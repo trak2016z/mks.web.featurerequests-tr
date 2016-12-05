@@ -11,6 +11,7 @@ using MKS.Web.FeatureRequests.Model.DataRequest;
 using MKS.Web.FeatureRequests.Model.Common;
 using System.Security.Claims;
 using MKS.Web.Common;
+using MKS.Web.FeatureRequests.Model;
 
 // For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -42,12 +43,14 @@ namespace MKS.Web.FeatureRequests.Controllers.MVC
         }
 
         #region Create()
+        [Authorize(Roles = Constants.RoleNames.Superadministrator)]
         public IActionResult Create()
         {
             return View("Edit", new Project());
         }
 
         [HttpPost]
+        [Authorize(Roles = Constants.RoleNames.Superadministrator)]
         public IActionResult Create(Project model)
         {
             if (ModelState.IsValid)
@@ -68,6 +71,7 @@ namespace MKS.Web.FeatureRequests.Controllers.MVC
         #endregion
 
         #region Edit()
+        [Authorize(Roles = Constants.RoleNames.Superadministrator)]
         public IActionResult Edit(int id)
         {
             var model = _projects.GetById(id);
@@ -77,6 +81,7 @@ namespace MKS.Web.FeatureRequests.Controllers.MVC
         }
 
         [HttpPost]
+        [Authorize(Roles = Constants.RoleNames.Superadministrator)]
         public IActionResult Edit(long id, Project model)
         {
             if (ModelState.IsValid)
@@ -89,7 +94,18 @@ namespace MKS.Web.FeatureRequests.Controllers.MVC
             }
 
             return View(model);
-        } 
+        }
+        #endregion
+
+        #region View()
+        public IActionResult View(long id)
+        {
+            var project = _projects.GetById(id);
+            if (project == null)
+                return NotFound();
+
+            return View(new Project(project));
+        }
         #endregion
     }
 }

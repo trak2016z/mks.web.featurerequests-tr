@@ -120,7 +120,12 @@ namespace MKS.Web.FeatureRequests
             app.UseOpenIdConnectAuthentication(openIdOpts);
 
             app.UseStaticFiles();
-            app.UseMvcWithDefaultRoute();
+            app.UseMvc(routes =>
+            {
+                routes.MapRoute(
+                  name: "default",
+                  template: "{controller=Projects}/{action=List}/{id?}");
+            });
 
             app.UseSwagger();
             app.UseSwaggerUi();
@@ -133,6 +138,7 @@ namespace MKS.Web.FeatureRequests
         {
             services.AddScoped<ProjectsRepository>();
             services.AddScoped<UserRepository>();
+            services.AddScoped<FeatureRequestsRepository>();
         }
 
         private static async Task OnTokenValidated(IServiceProvider serviceProvider, TokenValidatedContext context)

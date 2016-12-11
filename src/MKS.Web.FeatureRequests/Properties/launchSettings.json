@@ -18,7 +18,6 @@
     },
     "MKS.Web.FeatureRequests": {
       "commandName": "Project",
-      "launchBrowser": true,
       "launchUrl": "http://localhost:5001/config/claims",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"

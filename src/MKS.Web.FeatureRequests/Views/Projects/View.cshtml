@@ -163,21 +163,10 @@
                     description: self.description()
                 };
 
-                $.ajax({
-                    url: '/api/featurerequests/' + @Model.Id,
-                    method: 'POST',
-                    data: JSON.stringify(model),
-                    contentType: 'application/json',
-                    success: function(data) {
-                        viewModel.refreshRequests();
-                        self.clear();
-                    },
-                    error: function(error) {
-                        if(error.status == 400) {
-                            MKS.setValidationErrors(error.responseJSON, self.validation);
-                        }
-                    }
-                })
+                MKS.Knockout.post('/api/featurerequests/' + @Model.Id, model, function(data) {
+                    viewModel.refreshRequests();
+                    self.clear();
+                }, self.validation);
             }
         };
 

@@ -40,7 +40,7 @@
                         </a>
                     </h4>
                 </div>
-                <div data-bind="attr: {'id': 'request-collapse-' + $index() }" class="panel-collapse collapse" role="tabpanel">
+                <div data-bind="attr: {'id': 'request-collapse-' + $index() }, event: { 'shown.bs.collapse': $parent.onRequestExpanded }" class="panel-collapse collapse" role="tabpanel">
                     <div class="panel-body" data-bind="text: description">
                     </div>
                 </div>
@@ -111,74 +111,68 @@
         };
         ko.validation.registerExtenders();
 
-        $(document).ready(function () {
+        var viewModel = ko.mapping.fromJSON('@Model.ToJson()');
+        viewModel.refreshRequests = function () {
+            $.getJSON(
+                '/api/featurerequests/' + @Model.Id,
+                function (data) {
+                    viewModel.featureRequests(data);
+                }
+            );
+        };
 
-            var viewModel = {
-                featureRequests: ko.observableArray([]),
+        viewModel.onRequestExpanded = function(request) {
+            console.log("Expand!");
+        };
 
-                refreshRequests: function () {
-                    var vm = this;
-                    $.getJSON(
-                        '/api/featurerequests/' + @Model.Id,
-                        function (data) {
-                            vm.featureRequests(data);
-                        }
-                    );
-                },
+        viewModel.anyItems = ko.computed(function () {
+            return this.featureRequests().length > 0;
+        }, viewModel);
 
-                newRequest: ko.validatedObservable({
-                    name: ko.observable('').extend({
-                        required: true,
-                        nameUnique: true
-                    }),
-                    description: ko.observable('').extend({
-                        required: true
-                    }),
+        viewModel.newRequest.clear = function() {
+            var self = viewModel.newRequest;
+            self.name('');
+            self.name.clearError();
+            self.description('');
+            self.description.clearError();
+        };
 
-                    submit: function() {
-                        if (!this.isValid()) {
-                            this.errors.showAllMessages();
-                        } else {
-                            var vm = this();
-                            var model = {
-                                name: vm.name(),
-                                description: vm.description()
-                            };
+        //unobtrusive validation rules for new request form
+        viewModel.newRequest.validation = ko.validatedObservable({
+            name: viewModel.newRequest.name.extend({
+                nameUnique: true,
+                required: true
+            }),
+            description: viewModel.newRequest.description.extend({
+                required: true
+            })
+        });
 
-                            $.ajax({
-                                url: '/api/featurerequests/' + @Model.Id,
-                                method: 'POST',
-                                data: JSON.stringify(model),
-                                contentType: 'application/json',
-                                success: function(data) {
-                                    viewModel.refreshRequests();
-                                    vm.clear();
-                                }
-                            })
-                        }
-                    },
+        viewModel.newRequest.submit = function() {
+            var self = viewModel.newRequest;
+            if (!self.validation.isValid()) {
+                self.validation.errors.showAllMessages();
+            } else {
+                var model = {
+                    name: self.name(),
+                    description: self.description()
+                };
 
-                    clear: function() {
-                        var current = this();
-                        current.name('');
-                        current.name.clearError();
-                        current.description('');
-                        current.description.clearError();
+                $.ajax({
+                    url: '/api/featurerequests/' + @Model.Id,
+                    method: 'POST',
+                    data: JSON.stringify(model),
+                    contentType: 'application/json',
+                    success: function(data) {
+                        viewModel.refreshRequests();
+                        self.clear();
                     }
-                }),
-            };
+                })
+            }
+        };
 
-            viewModel.refreshRequests = viewModel.refreshRequests.bind(viewModel);
-            viewModel.newRequest().submit = viewModel.newRequest().submit.bind(viewModel.newRequest);
-            viewModel.newRequest().clear = viewModel.newRequest().clear.bind(viewModel.newRequest);
-
-            viewModel.anyItems = ko.computed(function () {
-                return this.featureRequests().length > 0;
-            }, viewModel);
-
+        $(document).ready(function () {
             ko.applyBindings(viewModel, $("#featureRequests")[0]);
-
-            viewModel.refreshRequests();
         })
     </script>
 }

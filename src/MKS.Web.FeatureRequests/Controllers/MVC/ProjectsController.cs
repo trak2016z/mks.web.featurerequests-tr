@@ -12,6 +12,7 @@ using MKS.Web.FeatureRequests.Model.Common;
 using System.Security.Claims;
 using MKS.Web.Common;
 using MKS.Web.FeatureRequests.Model;
+using AutoMapper;
 
 // For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -21,10 +22,12 @@ namespace MKS.Web.FeatureRequests.Controllers.MVC
     public class ProjectsController : Controller
     {
         private readonly ProjectsRepository _projects;
+        private readonly FeatureRequestsRepository _featureRequests;
 
-        public ProjectsController(ProjectsRepository projects)
+        public ProjectsController(ProjectsRepository projects, FeatureRequestsRepository featureReuqests)
         {
             _projects = projects;
+            _featureRequests = featureReuqests;
         }
 
         public IActionResult Index()
@@ -104,7 +107,10 @@ namespace MKS.Web.FeatureRequests.Controllers.MVC
             if (project == null)
                 return NotFound();
 
-            return View(new Project(project));
+            var viewModel = new Project(project);
+            viewModel.FeatureRequests = Mapper.Map<List<FeatureRequest>>(_featureRequests.GetByProjectId(id));
+
+            return View(viewModel);
         }
         #endregion
     }

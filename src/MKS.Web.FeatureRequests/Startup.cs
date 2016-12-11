@@ -17,6 +17,8 @@ using System.IdentityModel.Tokens.Jwt;
 using IdentityModel;
 using MKS.Web.Common.ResourceManager;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Newtonsoft.Json.Serialization;
+using Microsoft.AspNetCore.Mvc.Formatters;
 
 namespace MKS.Web.FeatureRequests
 {
@@ -44,7 +46,6 @@ namespace MKS.Web.FeatureRequests
             services.AddDbContext<FeatureRequestsDbContext>(options =>
                 options.UseNpgsql(connectionString, o => o.MigrationsAssembly(migrationsAssembly)));
 
-            services.AddMvc();
             services.AddAutoMapper();
 
             string pathToDoc = Configuration["DocPath"];
@@ -62,6 +63,8 @@ namespace MKS.Web.FeatureRequests
                 options.IncludeXmlComments(pathToDoc);
                 options.DescribeAllEnumsAsStrings();
             });
+
+            services.AddMvc();
 
             // bootstrap html helpers
             // https://github.com/justdmitry/BootstrapMvc

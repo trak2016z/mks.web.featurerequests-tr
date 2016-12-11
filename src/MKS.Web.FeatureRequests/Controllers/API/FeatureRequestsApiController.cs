@@ -31,7 +31,7 @@ namespace MKS.Web.FeatureRequests.Controllers.API
         public IActionResult GetByProject(long projectId)
         {
             var entities = _featureRequests.GetByProjectId(projectId);
-            return Ok(Mapper.Map<List<FeatureRequestDTO>>(entities));
+            return base.Ok(Mapper.Map<List<Model.FeatureRequest>>(entities));
         }
 
 
@@ -42,13 +42,13 @@ namespace MKS.Web.FeatureRequests.Controllers.API
         /// <returns></returns>
         [HttpPost]
         [Route("{projectId}")]
-        public IActionResult AddRequest(long projectId, [FromBody]FeatureRequestDTO model)
+        public IActionResult AddRequest(long projectId, [FromBody] Model.FeatureRequest model)
         {
             if(ModelState.IsValid)
             {
                 try
                 {
-                    var entity = Mapper.Map<FeatureRequest>(model);
+                    var entity = Mapper.Map<Data.FeatureRequests.Model.FeatureRequest>(model);
                     entity.CreatedById = IdentityHelper.GetUserId(User);
                     _featureRequests.Add(projectId, entity);
                     return Ok();

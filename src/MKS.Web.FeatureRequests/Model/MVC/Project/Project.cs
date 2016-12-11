@@ -21,6 +21,12 @@ namespace MKS.Web.FeatureRequests.Model.MVC.Project
         /// </summary>
         public DateTime CreatedAt { get; set; }
 
+        public List<FeatureRequest> FeatureRequests { get; set; } = new List<FeatureRequest>();
+
+        /// <summary>
+        /// New request view model
+        /// </summary>
+        public NewFeatureRequest NewRequest { get; set; } = new NewFeatureRequest();
 
         /// <summary>
         /// Defaults

@@ -12,11 +12,11 @@ namespace MKS.Web.FeatureRequests.Model.DataRequest
     /// Default data request for lists.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class DataRequest<T> : IDataRequest<T> where T : IEntity
+    public class DataRequest<T> : IDataRequest<T> 
     {
         public SortDirection Direction { get; set; } = SortDirection.ASC;
 
-        public Expression<Func<T, object>> OrderBy { get; set; } = t => t.Id;
+        public Expression<Func<T, object>> OrderBy { get; set; } = null;
 
         public int PageIndex { get; set; } = 1;
 

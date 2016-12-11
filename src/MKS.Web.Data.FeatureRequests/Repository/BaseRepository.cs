@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MKS.Web.Data.FeatureRequests.Extensions;
 
 namespace MKS.Web.Data.FeatureRequests.Repository
 {
@@ -39,26 +40,7 @@ namespace MKS.Web.Data.FeatureRequests.Repository
         /// </summary>
         protected virtual IQueryable<T> GetListQueryable(IDataRequest<T> request)
         {
-            IQueryable<T> q = _db.Set<T>();
-
-            if (request.Where != null)
-                q = q.Where(request.Where);
-
-            if (request.OrderBy != null)
-            {
-                if (request.Direction == SortDirection.ASC)
-                    q = q.OrderBy(request.OrderBy);
-                else
-                    q = q.OrderByDescending(request.OrderBy);
-            }
-            else
-            {
-                //Id ASC by default
-                q = q.OrderBy(e => e.Id);
-            }
-
-            return q.Skip((request.PageIndex - 1) * request.PageSize)
-                .Take(request.PageSize);
+            return _db.Set<T>().FilterByDataRequest(request);
         }
 
         /// <summary>

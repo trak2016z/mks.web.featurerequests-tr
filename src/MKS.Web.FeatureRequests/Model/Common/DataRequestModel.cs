@@ -23,8 +23,12 @@ namespace MKS.Web.Data.FeatureRequests.Query
 
         public int PageSize { get; set; } = 10;
 
-
-        public Data.FeatureRequests.Query.IDataRequest<T> ToDataRequest<T>() where T: IEntity
+        /// <summary>
+        /// Create a data request for repositories.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public Data.FeatureRequests.Query.IDataRequest<T> ToDataRequest<T>()
         {
             var request = new DataRequest<T>()
             {

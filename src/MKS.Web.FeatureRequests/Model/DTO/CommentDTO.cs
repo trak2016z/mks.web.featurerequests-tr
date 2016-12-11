@@ -7,6 +7,8 @@ namespace MKS.Web.FeatureRequests.Model.DTO
 {
     public class CommentDTO
     {
+        public long Id { get; set; }
+        public long? ParentId { get; set; }
         public string CreatedByName { get; set; }
         public DateTime CreatedAt { get; set; }
         public string Content { get; set; }

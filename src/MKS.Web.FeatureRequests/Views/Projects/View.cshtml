@@ -122,7 +122,12 @@
         };
 
         viewModel.onRequestExpanded = function(request) {
-            console.log("Expand!");
+            console.log("Expand! " + request.id());
+        };
+
+        viewModel.refreshComments = function(request) {
+            //TODO: download comments
+            request.comments([]);
         };
 
         viewModel.anyItems = ko.computed(function () {
@@ -166,6 +171,11 @@
                     success: function(data) {
                         viewModel.refreshRequests();
                         self.clear();
+                    },
+                    error: function(error) {
+                        if(error.status == 400) {
+                            MKS.setValidationErrors(error.responseJSON, self.validation);
+                        }
                     }
                 })
             }

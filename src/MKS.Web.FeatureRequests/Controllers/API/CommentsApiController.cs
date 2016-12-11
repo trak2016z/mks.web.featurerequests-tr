@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MKS.Web.Common;
 
 namespace MKS.Web.FeatureRequests.Controllers.API
 {
@@ -32,6 +33,26 @@ namespace MKS.Web.FeatureRequests.Controllers.API
             var entities = _comments.GetByFeatureRequest(requestId, query.ToDataRequest<CommentView>());
             var viewModels = Mapper.Map<List<CommentDTO>>(entities);
             return Ok(viewModels);
+        }
+
+        //POST: api/comments/request/4/create
+        [HttpPost]
+        [Route("request/{requestId}/create")]
+        public IActionResult PostComment([FromRoute]long requestId, [FromBody]CommentDTO model)
+        {
+            if(ModelState.IsValid)
+            {
+                _comments.Add(new Comment()
+                {
+                    Content = model.Content,
+                    CreatedById = User.GetUserId(),
+                    FeatureRequestId = requestId,
+                    ParentId = model.ParentId,
+                    CreatedAtUtc = DateTime.Now.ToUniversalTime()
+                });
+            }
+            
+            return Ok(ModelState);
         }
     }
 }

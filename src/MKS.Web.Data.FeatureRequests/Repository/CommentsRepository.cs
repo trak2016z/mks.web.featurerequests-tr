@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MKS.Web.Data.FeatureRequests.Extensions;
+using MKS.Web.Data.FeatureRequests.Exception;
 
 namespace MKS.Web.Data.FeatureRequests.Repository
 {
@@ -14,6 +15,29 @@ namespace MKS.Web.Data.FeatureRequests.Repository
             : base(db)
         {
 
+        }
+
+        public override void Add(Comment entity)
+        {
+            using (var transaction = _db.Database.BeginTransaction())
+            {
+                if(_db.FeatureRequests.Any(r => r.Id == entity.FeatureRequestId))
+                {
+                    //if parent id specified, check if it exists
+                    if(entity.ParentId > 0 && !_db.Comments.Any(c => c.Id == entity.ParentId))
+                    {
+                        throw new BusinessException("Invalid parent id.", nameof(entity.ParentId));
+                    }
+
+                    _db.Comments.Add(entity);
+                    _db.SaveChanges();
+                    transaction.Commit();
+                }
+                else
+                {
+                    throw new BusinessException("Invalid feature request or parent comment id.", nameof(entity.FeatureRequestId));
+                }
+            }
         }
 
         /// <summary>

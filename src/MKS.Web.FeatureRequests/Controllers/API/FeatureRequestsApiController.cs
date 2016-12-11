@@ -10,12 +10,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MKS.Web.Common.Extensions;
 
 namespace MKS.Web.FeatureRequests.Controllers.API
 {
     [Authorize]
     [Route("api/featurerequests")]
-    public class FeatureRequestsApiController : Controller
+    public class FeatureRequestsApiController : BaseController
     {
         private readonly FeatureRequestsRepository _featureRequests;
 
@@ -56,12 +57,12 @@ namespace MKS.Web.FeatureRequests.Controllers.API
                 catch (BusinessException ex)
                 {
                     ModelState.AddModelError(ex.Property, ex.Message);
-                    return Ok(ModelState);
+                    return BadRequestValidationErrors();
                 }
             }
             else
             {
-                return Ok(ModelState);
+                return BadRequestValidationErrors();
             }
         }
 

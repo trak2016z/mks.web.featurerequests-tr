@@ -6,9 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 using MKS.Web.Data.FeatureRequests.Repository;
 using MKS.Web.Data.FeatureRequests.Model;
 using Microsoft.AspNetCore.Authorization;
-using MKS.Web.FeatureRequests.Model.DTO;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using MKS.Web.FeatureRequests.Model.Project;
 
 namespace MKS.Web.FeatureRequests.Controllers
 {
@@ -32,22 +32,22 @@ namespace MKS.Web.FeatureRequests.Controllers
         /// Get all projects.
         /// </summary>
         [HttpGet]
-        public IEnumerable<ProjectDTO> Get()
+        public IEnumerable<ProjectListItem> Get()
         {
-            return _mapper.Map<List<ProjectDTO>>(_projects.GetList());
+            return _mapper.Map<List<ProjectListItem>>(_projects.GetList());
         }
 
         /// <summary>
         /// Get a single project by id.
         /// </summary>
         [HttpGet("{id}")]
-        [Produces(typeof(ProjectDTO))]
+        [Produces(typeof(ProjectListItem))]
         public IActionResult Get(long id)
         {
             var p = _projects.GetById(id);
 
             if (p != null)
-                return Ok(_mapper.Map<ProjectDTO>(p));
+                return Ok(_mapper.Map<ProjectListItem>(p));
             else
                 return NotFound();
         }
@@ -57,7 +57,7 @@ namespace MKS.Web.FeatureRequests.Controllers
         /// </summary>
         [HttpPost]
         [Produces(typeof(ModelStateDictionary))]
-        public IActionResult Post([FromBody]ProjectDTO model)
+        public IActionResult Post([FromBody]ProjectListItem model)
         {
             if(ModelState.IsValid)
             {
@@ -74,7 +74,7 @@ namespace MKS.Web.FeatureRequests.Controllers
         /// Update a project.
         /// </summary>
         [HttpPut("{id}")]
-        public IActionResult Put(long id, [FromBody]ProjectDTO model)
+        public IActionResult Put(long id, [FromBody]ProjectListItem model)
         {
             if (ModelState.IsValid)
             {

@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using MKS.Web.FeatureRequests.Model.MVC.Project;
 using MKS.Web.Data.FeatureRequests.Repository;
 using MKS.Web.Data.FeatureRequests.Query;
 using MKS.Web.FeatureRequests.Model.DataRequest;
@@ -13,6 +12,7 @@ using System.Security.Claims;
 using MKS.Web.Common;
 using MKS.Web.FeatureRequests.Model;
 using AutoMapper;
+using MKS.Web.FeatureRequests.Model.Project;
 
 // For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -39,22 +39,20 @@ namespace MKS.Web.FeatureRequests.Controllers.MVC
         {
             if (query == null) query = new DataRequestModel();
 
-            var data = _projects.GetList(query.ToDataRequest<Data.FeatureRequests.Model.Project>())
-                .Select(p => new Project(p))
-                .ToList();
-            return View(data);
+            var data = _projects.GetList(query.ToDataRequest<Data.FeatureRequests.Model.Project>());
+            return View(Mapper.Map<List<ProjectListItem>>(data));
         }
 
         #region Create()
         [Authorize(Roles = Constants.RoleNames.Superadministrator)]
         public IActionResult Create()
         {
-            return View("Edit", new Project());
+            return View("Edit", new ProjectEdit());
         }
 
         [HttpPost]
         [Authorize(Roles = Constants.RoleNames.Superadministrator)]
-        public IActionResult Create(Project model)
+        public IActionResult Create(ProjectEdit model)
         {
             if (ModelState.IsValid)
             {
@@ -80,12 +78,12 @@ namespace MKS.Web.FeatureRequests.Controllers.MVC
             var model = _projects.GetById(id);
             if (model == null) return NotFound();
 
-            return View(new Project(model));
+            return View(Mapper.Map<ProjectEdit>(model));
         }
 
         [HttpPost]
         [Authorize(Roles = Constants.RoleNames.Superadministrator)]
-        public IActionResult Edit(long id, Project model)
+        public IActionResult Edit(long id, ProjectEdit model)
         {
             if (ModelState.IsValid)
             {
@@ -107,8 +105,8 @@ namespace MKS.Web.FeatureRequests.Controllers.MVC
             if (project == null)
                 return NotFound();
 
-            var viewModel = new Project(project);
-            viewModel.FeatureRequests = Mapper.Map<List<FeatureRequest>>(_featureRequests.GetByProjectId(id));
+            var viewModel = Mapper.Map<ProjectView>(project);
+            viewModel.FeatureRequests = Mapper.Map<List<FeatureRequestView>>(_featureRequests.GetByProjectId(id));
 
             return View(viewModel);
         }

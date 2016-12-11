@@ -4,13 +4,15 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace MKS.Web.FeatureRequests.Model.MVC.Project
+namespace MKS.Web.FeatureRequests.Model.Project
 {
-    public class NewFeatureRequest
+    public class ProjectEdit
     {
+        public long Id { get; set; }
+
         [Required]
         public string Name { get; set; }
-        [Required]
+
         public string Description { get; set; }
     }
 }

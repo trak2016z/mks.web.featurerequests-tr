@@ -1,0 +1,68 @@
+﻿<div class="row" data-bind="if: $parent.currentOpenRequestId() == $data.id()">
+    <div class="col-sm-12">
+        <div data-bind="attr: {'id': 'request-newComment-accordion-' + $index() }" class="panel-group" role="tablist" aria-multiselectable="true">
+            <div class="panel panel-default">
+                <div class="panel-heading" role="tab">
+                    <h4 class="panel-title">
+                        <a role="button"
+                           data-toggle="collapse"
+                           data-bind="attr: {'data-parent': '#request-newComment-accordion-' + $index(), 'href': '#request-newComment-collapse-' + $index() }"
+                           href="#">
+                            New comment
+                        </a>
+                    </h4>
+                </div>
+                <div data-bind="attr: {'id': 'request-newComment-collapse-' + $index() }, with: $parent.newComment" class="panel-collapse collapse" role="tabpanel">
+                    <div class="panel-body clearfix">
+                        <form class="form-horizontal" data-bind="submit: submit">
+                            <div class="form-group" data-bind="validationElement: content">
+                                <label class="col-sm-2 control-label">Content</label>
+                                <div class="col-sm-10">
+                                    <textarea class="form-control" data-bind="textInput: content"></textarea>
+                                </div>
+                            </div>
+                            <button class="btn btn-success pull-right" type="submit">Submit</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var initNewCommentPartial = function (parentViewModel) {
+        var viewModel = parentViewModel.newComment;
+
+        viewModel.requestId = ko.observable(0);
+
+        viewModel.validation = ko.validatedObservable({
+            content: viewModel.content.extend({
+                required: true
+            })
+        });
+
+        viewModel.clear = function () {
+            var self = viewModel;
+            self.content('');
+            self.content.clearError();
+        };
+
+        viewModel.submit = function() {
+            var self = viewModel;
+            if (!self.validation.isValid()) {
+                self.validation.errors.showAllMessages();
+            } else {
+                var model = {
+                    content: self.content(),
+                    requestId: self.requestId()
+                };
+
+                MKS.Knockout.post('/api/comments/request', model, function(data) {
+                    parentViewModel.refreshComments(self.requestId());
+                    self.clear();
+                }, self.validation);
+            }
+        };
+    };
+</script>

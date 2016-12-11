@@ -8,9 +8,10 @@ using MKS.Web.Data.FeatureRequests;
 namespace MKS.Web.FeatureRequests.Migrations
 {
     [DbContext(typeof(FeatureRequestsDbContext))]
-    partial class FeatureRequestsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20161211185213_GivenName")]
+    partial class GivenName
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn)

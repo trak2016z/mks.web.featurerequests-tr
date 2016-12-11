@@ -15,7 +15,7 @@ namespace MKS.Web.Data.FeatureRequests.Extensions
         /// <param name="q"></param>
         /// <param name="request"></param>
         /// <returns></returns>
-        public static IQueryable<T> FilterByDataRequest<T>(this IQueryable<T> q, IDataRequest<T> request) where T: IEntity
+        public static IQueryable<T> FilterByDataRequest<T>(this IQueryable<T> q, IDataRequest<T> request) 
         {
             if (request.Where != null)
                 q = q.Where(request.Where);
@@ -26,11 +26,6 @@ namespace MKS.Web.Data.FeatureRequests.Extensions
                     q = q.OrderBy(request.OrderBy);
                 else
                     q = q.OrderByDescending(request.OrderBy);
-            }
-            else
-            {
-                //Id ASC by default
-                q = q.OrderBy(e => e.Id);
             }
 
             return q.Skip((request.PageIndex - 1) * request.PageSize)

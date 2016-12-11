@@ -5,12 +5,12 @@ using MKS.Web.Common;
 using MKS.Web.Data.FeatureRequests.Exception;
 using MKS.Web.Data.FeatureRequests.Model;
 using MKS.Web.Data.FeatureRequests.Repository;
-using MKS.Web.FeatureRequests.Model.DTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MKS.Web.Common.Extensions;
+using MKS.Web.FeatureRequests.Model.Project;
 
 namespace MKS.Web.FeatureRequests.Controllers.API
 {
@@ -32,7 +32,7 @@ namespace MKS.Web.FeatureRequests.Controllers.API
         public IActionResult GetByProject(long projectId)
         {
             var entities = _featureRequests.GetByProjectId(projectId);
-            return base.Ok(Mapper.Map<List<Model.FeatureRequest>>(entities));
+            return base.Ok(Mapper.Map<List<FeatureRequestView>>(entities));
         }
 
 
@@ -43,7 +43,7 @@ namespace MKS.Web.FeatureRequests.Controllers.API
         /// <returns></returns>
         [HttpPost]
         [Route("{projectId}")]
-        public IActionResult AddRequest(long projectId, [FromBody] Model.FeatureRequest model)
+        public IActionResult AddRequest(long projectId, [FromBody]FeatureRequestCreate model)
         {
             if(ModelState.IsValid)
             {

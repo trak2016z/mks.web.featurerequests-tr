@@ -1,0 +1,18 @@
+﻿<div class="row">
+    <div class="col-sm-12">
+        <ul class="list-group col-sm-12" data-bind="foreach: comments">
+            <li class="list-group-item">
+                <h4 class="list-group-item-heading" data-bind="text: createdByName"></h4>
+                <span data-bind="text: moment(createdAt).format('YYYY-MM-DD HH:mm')"></span>
+
+                <p class="list-group-item-text" data-bind="text: content"></p>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<script>
+    var initCommentsListPartial = function (parentViewModel) {
+
+    };
+</script>

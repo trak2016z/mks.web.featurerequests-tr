@@ -6,9 +6,9 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace MKS.Web.FeatureRequests.Model
+namespace MKS.Web.FeatureRequests.Model.Project
 {
-    public class FeatureRequest
+    public class FeatureRequestView
     {
         public long Id { get; set; }
 
@@ -19,5 +19,7 @@ namespace MKS.Web.FeatureRequests.Model
         public string Description { get; set; }
 
         public int Votes { get; set; }
+
+        public List<CommentView> Comments { get; set; } = new List<CommentView>();
     }
 }

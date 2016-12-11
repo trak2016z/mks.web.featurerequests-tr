@@ -18,16 +18,23 @@ namespace MKS.Web.Data.FeatureRequests.Repository
             _db = db;
         }
 
-        public async Task EnsureRegisteredAsync(string id)
+        public async Task AddOrUpdateAsync(User user)
         {
             using (var scope = await _db.Database.BeginTransactionAsync())
             {
-                if(!await _db.Users.AnyAsync(u => u.Id == id))
+                var oldUser = await _db.Users.FirstOrDefaultAsync(u => u.Id == user.Id);
+
+                if (oldUser == null)
                 {
-                    _db.Users.Add(new User() { Id = id });
-                    await _db.SaveChangesAsync();
-                    scope.Commit();
+                    _db.Users.Add(user);
                 }
+                else
+                {
+                    oldUser.GivenName = user.GivenName;
+                }
+
+                await _db.SaveChangesAsync();
+                scope.Commit();
             }
         }
     }

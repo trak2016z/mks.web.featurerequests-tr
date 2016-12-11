@@ -1,0 +1,79 @@
+﻿@model MKS.Web.FeatureRequests.Model.Project.ProjectView
+
+<div class="row" data-bind="with: newRequest">
+    <div class="panel-group" id="formAccordion" role="tablist" aria-multiselectable="true">
+        <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="head">
+                <h4 class="panel-title">
+                    <a role="button"
+                       data-toggle="collapse"
+                       data-parent="#formAccordion"
+                       href="#formCollapse">
+                        Create a new feature request!
+                    </a>
+                </h4>
+            </div>
+            <div id="formCollapse" class="panel-collapse collapse" role="tabpanel">
+                <div class="panel-body clearfix">
+                    <form class="form-horizontal" data-bind="submit: submit">
+                        <div class="form-group" data-bind="validationElement: name">
+                            <label class="col-sm-2 control-label">Name</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" data-bind="textInput: name" />
+                            </div>
+                        </div>
+                        <div class="form-group" data-bind="validationElement: description">
+                            <label class="col-sm-2 control-label">Description</label>
+                            <div class="col-sm-10">
+                                <textarea class="form-control" data-bind="textInput: description"></textarea>
+                            </div>
+                        </div>
+                        <button class="btn btn-success pull-right" type="submit">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var initNewRequestPartial = function (parentViewModel) {
+        var viewModel = parentViewModel.newRequest;
+
+        viewModel.clear = function() {
+            var self = viewModel;
+            self.name('');
+            self.name.clearError();
+            self.description('');
+            self.description.clearError();
+        };
+
+        //unobtrusive validation rules for new request form
+        viewModel.validation = ko.validatedObservable({
+            name: viewModel.name.extend({
+                nameUnique: true,
+                required: true
+            }),
+            description: viewModel.description.extend({
+                required: true
+            })
+        });
+
+        viewModel.submit = function() {
+            var self = viewModel;
+            if (!self.validation.isValid()) {
+                self.validation.errors.showAllMessages();
+            } else {
+                var model = {
+                    name: self.name(),
+                    description: self.description()
+                };
+
+                MKS.Knockout.post('/api/featurerequests/' + @Model.Id, model, function(data) {
+                    parentViewModel.refreshRequests();
+                    self.clear();
+                }, self.validation);
+            }
+        };
+    };
+</script>

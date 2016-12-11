@@ -1,22 +1,24 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MKS.Web.Data.FeatureRequests.Model;
-using MKS.Web.Data.FeatureRequests.Model.View;
 using MKS.Web.Data.FeatureRequests.Query;
 using MKS.Web.Data.FeatureRequests.Repository;
-using MKS.Web.FeatureRequests.Model.DTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MKS.Web.Common;
+using MKS.Web.Data.FeatureRequests.Exception;
+using MKS.Web.FeatureRequests.Model.DataRequest;
+
+using VM = MKS.Web.FeatureRequests.Model.Project;
+using BM = MKS.Web.Data.FeatureRequests.Model;
 
 namespace MKS.Web.FeatureRequests.Controllers.API
 {
     [Authorize]
     [Route("api/comments")]
-    public class CommentsApiController : Controller
+    public class CommentsApiController : BaseController
     {
         private readonly CommentsRepository _comments;
 
@@ -25,34 +27,62 @@ namespace MKS.Web.FeatureRequests.Controllers.API
             _comments = comments;
         }
 
+        //GET: api/comments/request/4
+        [HttpGet]
+        [Route("request/{requestId}")]
+        public IActionResult GetByRequest([FromRoute]long requestId)
+        {
+            var entities = _comments.GetByFeatureRequest(requestId, new DataRequest<Data.FeatureRequests.Model.View.CommentView>()
+            {
+                PageSize = int.MaxValue,
+                OrderBy = c => c.CreatedAt,
+                Direction = SortDirection.DESC
+            });
+
+            var viewModels = Mapper.Map<List<VM.CommentView>>(entities);
+            return Ok(viewModels);
+        }
+
         //POST: api/comments/request/4
         [HttpPost]
         [Route("request/{requestId}")]
         public IActionResult GetByRequest([FromRoute]long requestId, [FromBody]DataRequestModel query)
         {
-            var entities = _comments.GetByFeatureRequest(requestId, query.ToDataRequest<CommentView>());
-            var viewModels = Mapper.Map<List<CommentDTO>>(entities);
+            var entities = _comments.GetByFeatureRequest(requestId, query.ToDataRequest<BM.View.CommentView>());
+            var viewModels = Mapper.Map<List<VM.CommentView>>(entities);
             return Ok(viewModels);
         }
 
-        //POST: api/comments/request/4/create
+        //POST: api/comments/request
         [HttpPost]
-        [Route("request/{requestId}/create")]
-        public IActionResult PostComment([FromRoute]long requestId, [FromBody]CommentDTO model)
+        [Route("request")]
+        public IActionResult AddRequestComment([FromBody]VM.CommentCreate model)
         {
             if(ModelState.IsValid)
             {
-                _comments.Add(new Comment()
+                try
                 {
-                    Content = model.Content,
-                    CreatedById = User.GetUserId(),
-                    FeatureRequestId = requestId,
-                    ParentId = model.ParentId,
-                    CreatedAtUtc = DateTime.Now.ToUniversalTime()
-                });
+                    _comments.Add(new Data.FeatureRequests.Model.Comment()
+                    {
+                        Content = model.Content,
+                        CreatedById = User.GetUserId(),
+                        FeatureRequestId = model.RequestId,
+                        ParentId = null,
+                        CreatedAtUtc = DateTime.Now.ToUniversalTime()
+                    });
+
+                    return Ok();
+                }
+                catch (BusinessException ex)
+                {
+                    ModelState.AddModelError(ex.Property, ex.Message);
+                    return BadRequestValidationErrors();
+                }
             }
-            
-            return Ok(ModelState);
+            else
+            {
+                return BadRequestValidationErrors();
+            }
         }
     }
 }

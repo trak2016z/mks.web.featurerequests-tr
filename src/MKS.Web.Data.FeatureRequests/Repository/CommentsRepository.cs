@@ -48,7 +48,7 @@ namespace MKS.Web.Data.FeatureRequests.Repository
         /// <returns></returns>
         public List<Model.View.CommentView> GetByFeatureRequest(long requestId, IDataRequest<Model.View.CommentView> query)
         {
-            var q = from comment in _db.Comments.Where(c => c.FeatureRequestId == requestId)
+            var q = (from comment in _db.Comments.Where(c => c.FeatureRequestId == requestId)
                     from user in _db.Users.Where(u => u.Id == comment.CreatedById)
                     select new Model.View.CommentView()
                     {
@@ -57,10 +57,10 @@ namespace MKS.Web.Data.FeatureRequests.Repository
                         FeatureRequestId = comment.FeatureRequestId,
                         Content = comment.Content,
                         Votes = comment.Votes,
-                        CreatedByName = user.FirstName,
+                        CreatedByName = user.GivenName,
                         CreatedById = comment.CreatedById,
                         CreatedAt = comment.CreatedAtUtc,
-                    };
+                    }).FilterByDataRequest(query);
 
             //to local time has to be done outside db
             var list = q.ToList();

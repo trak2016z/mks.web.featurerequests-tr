@@ -13,6 +13,6 @@ namespace MKS.Web.Data.FeatureRequests.Model
     public class User
     {
         public string Id { get; set; }
-        public string FirstName { get; set; }
+        public string GivenName { get; set; }
     }
 }

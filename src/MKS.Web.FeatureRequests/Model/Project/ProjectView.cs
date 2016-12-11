@@ -4,12 +4,12 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace MKS.Web.FeatureRequests.Model.MVC.Project
+namespace MKS.Web.FeatureRequests.Model.Project
 {
     /// <summary>
     /// Project view model
     /// </summary>
-    public class Project
+    public class ProjectView
     {
         public long Id { get; set; }
         [Required]
@@ -21,29 +21,16 @@ namespace MKS.Web.FeatureRequests.Model.MVC.Project
         /// </summary>
         public DateTime CreatedAt { get; set; }
 
-        public List<FeatureRequest> FeatureRequests { get; set; } = new List<FeatureRequest>();
+        public List<FeatureRequestView> FeatureRequests { get; set; } = new List<FeatureRequestView>();
 
         /// <summary>
         /// New request view model
         /// </summary>
-        public NewFeatureRequest NewRequest { get; set; } = new NewFeatureRequest();
+        public FeatureRequestCreate NewRequest { get; set; } = new FeatureRequestCreate();
 
         /// <summary>
-        /// Defaults
+        /// New comment view model
         /// </summary>
-        public Project()
-        {
-
-        }
-
-        /// <summary>
-        /// Create from domain/entity model.
-        /// </summary>
-        public Project(MKS.Web.Data.FeatureRequests.Model.Project data)
-        {
-            Id = data.Id;
-            Name = data.Name;
-            Description = data.Description;
-        }
+        public CommentCreate NewComment { get; set; } = new CommentCreate();
     }
 }

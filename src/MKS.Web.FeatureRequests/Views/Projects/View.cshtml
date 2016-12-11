@@ -1,22 +1,24 @@
-﻿@model MKS.Web.FeatureRequests.Model.MVC.Project.Project
+﻿@model MKS.Web.FeatureRequests.Model.Project.ProjectView
 
 @{ 
     ViewBag.Title = "Project feature requests";
 }
 
 <div class="row">
-    <h3>Project "@Model.Name"</h3>
-    <div class="form-horizontal">
-        <div class="form-group">
-            <label class="col-sm-2 control-label">Name</label>
-            <div class="col-sm-10">
-                <p class="form-control-static">@Model.Name</p>
+    <div class="col-sm-12">
+        <h3>Project "@Model.Name"</h3>
+        <div class="form-horizontal">
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Name</label>
+                <div class="col-sm-10">
+                    <p class="form-control-static">@Model.Name</p>
+                </div>
             </div>
-        </div>
-        <div class="form-group">
-            <label class="col-sm-2 control-label">Description</label>
-            <div class="col-sm-10">
-                <p class="form-control-static">@Model.Description</p>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Description</label>
+                <div class="col-sm-10">
+                    <p class="form-control-static">@Model.Description</p>
+                </div>
             </div>
         </div>
     </div>
@@ -28,7 +30,7 @@
         <div data-bind="foreach: featureRequests"
              class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
             <div class="panel panel-default">
-                <div class="panel-heading" role="tab" id="head">
+                <div class="panel-heading" role="tab">
                     <h4 class="panel-title">
                         <a role="button"
                            data-toggle="collapse" 
@@ -41,7 +43,13 @@
                     </h4>
                 </div>
                 <div data-bind="attr: {'id': 'request-collapse-' + $index() }, event: { 'shown.bs.collapse': $parent.onRequestExpanded }" class="panel-collapse collapse" role="tabpanel">
-                    <div class="panel-body" data-bind="text: description">
+                    <div class="panel-body">
+                        <div class="row">
+                            <p class="col-sm-12" data-bind="text: description"></p>
+                        </div>
+                        <h4>Comments:</h4>
+                        @Html.Partial("Partials/_NewComment.cshtml")
+                        @Html.Partial("Partials/_CommentsList.cshtml")
                     </div>
                 </div>
             </div>
@@ -52,41 +60,7 @@
         </div>
     </div>
 
-    <div class="row">
-        <div class="panel-group" id="formAccordion" role="tablist" aria-multiselectable="true">
-            <div class="panel panel-default">
-                <div class="panel-heading" role="tab" id="head">
-                    <h4 class="panel-title">
-                        <a role="button"
-                           data-toggle="collapse"
-                           data-parent="#formAccordion"
-                           href="#formCollapse">
-                            Create a new feature request!
-                        </a>
-                    </h4>
-                </div>
-                <div id="formCollapse" class="panel-collapse collapse" role="tabpanel" data-bind="with: newRequest">
-                    <div class="panel-body clearfix">
-                        <form class="form-horizontal" data-bind="submit: submit">
-                            <div class="form-group" data-bind="validationElement: name">
-                                <label class="col-sm-2 control-label">Name</label>
-                                <div class="col-sm-10">
-                                    <input type="text" class="form-control" data-bind="textInput: name" />
-                                </div>
-                            </div>
-                            <div class="form-group" data-bind="validationElement: description">
-                                <label class="col-sm-2 control-label">Description</label>
-                                <div class="col-sm-10">
-                                    <textarea class="form-control" data-bind="textInput: description"></textarea>
-                                </div>
-                            </div>
-                            <button class="btn btn-success pull-right" type="submit">Submit</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    @Html.Partial("Partials/_NewRequest.cshtml", Model)
 </div>
 
 @section scripts {
@@ -121,56 +95,41 @@
             );
         };
 
+        viewModel.currentOpenRequestId = ko.observable(0);
+
         viewModel.onRequestExpanded = function(request) {
-            console.log("Expand! " + request.id());
+            viewModel.currentOpenRequestId(request.id());
+            viewModel.newComment.requestId(request.id());
+            viewModel.refreshComments(request.id());
         };
 
-        viewModel.refreshComments = function(request) {
-            //TODO: download comments
-            request.comments([]);
+        viewModel.findRequestById = function(requestId) {
+            return ko.utils.arrayFirst(viewModel.featureRequests(), function(request) {
+                return request.id() == requestId;
+            } || -1);
+        };
+
+        viewModel.refreshComments = function(requestId) {
+            var request = viewModel.findRequestById(requestId);
+
+            $.getJSON(
+                '/api/comments/request/' + request.id(),
+                function (data) {
+                    request.comments(data);
+                }
+            );
         };
 
         viewModel.anyItems = ko.computed(function () {
             return this.featureRequests().length > 0;
         }, viewModel);
 
-        viewModel.newRequest.clear = function() {
-            var self = viewModel.newRequest;
-            self.name('');
-            self.name.clearError();
-            self.description('');
-            self.description.clearError();
-        };
-
-        //unobtrusive validation rules for new request form
-        viewModel.newRequest.validation = ko.validatedObservable({
-            name: viewModel.newRequest.name.extend({
-                nameUnique: true,
-                required: true
-            }),
-            description: viewModel.newRequest.description.extend({
-                required: true
-            })
-        });
-
-        viewModel.newRequest.submit = function() {
-            var self = viewModel.newRequest;
-            if (!self.validation.isValid()) {
-                self.validation.errors.showAllMessages();
-            } else {
-                var model = {
-                    name: self.name(),
-                    description: self.description()
-                };
-
-                MKS.Knockout.post('/api/featurerequests/' + @Model.Id, model, function(data) {
-                    viewModel.refreshRequests();
-                    self.clear();
-                }, self.validation);
-            }
-        };
-
         $(document).ready(function () {
+            //init partials before applying viewmodel
+            initNewRequestPartial(viewModel);
+            initNewCommentPartial(viewModel);
+            initCommentsListPartial(viewModel);
+
             ko.applyBindings(viewModel, $("#featureRequests")[0]);
         })
     </script>

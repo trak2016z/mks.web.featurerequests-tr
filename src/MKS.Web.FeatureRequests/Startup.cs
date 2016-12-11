@@ -19,6 +19,7 @@ using MKS.Web.Common.ResourceManager;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Newtonsoft.Json.Serialization;
 using Microsoft.AspNetCore.Mvc.Formatters;
+using MKS.Web.Data.FeatureRequests.Model;
 
 namespace MKS.Web.FeatureRequests
 {
@@ -142,6 +143,7 @@ namespace MKS.Web.FeatureRequests
             services.AddScoped<ProjectsRepository>();
             services.AddScoped<UserRepository>();
             services.AddScoped<FeatureRequestsRepository>();
+            services.AddScoped<CommentsRepository>();
         }
 
         private static async Task OnTokenValidated(IServiceProvider serviceProvider, TokenValidatedContext context)
@@ -150,7 +152,12 @@ namespace MKS.Web.FeatureRequests
             {
                 var userRepository = serviceScope.ServiceProvider.GetRequiredService<UserRepository>();
                 var userId = context.Ticket.Principal.Claims.First(c => c.Type == JwtClaimTypes.Subject).Value;
-                await userRepository.EnsureRegisteredAsync(userId);
+                var userName = context.Ticket.Principal.Claims.First(c => c.Type == JwtClaimTypes.Name).Value;
+                await userRepository.AddOrUpdateAsync(new User()
+                {
+                    Id = userId,
+                    GivenName = userName
+                });
             }
         }
     }

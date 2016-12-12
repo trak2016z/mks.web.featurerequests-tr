@@ -6,13 +6,8 @@ using System.Threading.Tasks;
 
 namespace MKS.Web.FeatureRequests.Model.Project
 {
-    public class CommentView
+    public class CommentVotes
     {
-        public long Id { get; set; }
-        public long? ParentId { get; set; }
-        public string CreatedByName { get; set; }
-        public DateTime CreatedAt { get; set; }
-        public string Content { get; set; }
         public int Votes { get; set; }
         public VoteType? CurrentUserVote { get; set; }
     }

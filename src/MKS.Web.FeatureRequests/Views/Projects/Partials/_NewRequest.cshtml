@@ -51,8 +51,9 @@
         //unobtrusive validation rules for new request form
         viewModel.validation = ko.validatedObservable({
             name: viewModel.name.extend({
-                nameUnique: true,
-                required: true
+                minLength: 3,
+                required: true,
+                nameUnique: true
             }),
             description: viewModel.description.extend({
                 required: true

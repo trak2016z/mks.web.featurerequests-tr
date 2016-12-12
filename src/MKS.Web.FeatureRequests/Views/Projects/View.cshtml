@@ -115,10 +115,37 @@
             $.getJSON(
                 '/api/comments/request/' + request.id(),
                 function (data) {
+                    //votes will change, make them observable
+                    ko.utils.arrayForEach(data, function(item) {
+                        item.votes = ko.observable(item.votes); 
+                        item.currentUserVote = ko.observable(item.currentUserVote);
+                    });
                     request.comments(data);
                 }
             );
         };
+
+        viewModel.refreshCommentVotes = function(comment) {
+            $.getJSON(
+                '/api/votes/comment/' + comment.id,
+                function (data) {
+                    comment.votes(data.votes);
+                    comment.currentUserVote(data.currentUserVote)
+                }
+            );
+        }
+
+        viewModel.upvoteComment = function(comment) {
+            MKS.Knockout.post('/api/votes/comment/' + comment.id + '/up', null, function() {
+                viewModel.refreshCommentVotes(comment);
+            });
+        }
+
+        viewModel.downvoteComment = function(comment) {
+            MKS.Knockout.post('/api/votes/comment/' + comment.id + '/down', null, function() {
+                viewModel.refreshCommentVotes(comment);
+            });
+        }
 
         viewModel.anyItems = ko.computed(function () {
             return this.featureRequests().length > 0;

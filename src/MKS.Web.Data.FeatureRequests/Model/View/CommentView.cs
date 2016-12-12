@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MKS.Web.Data.FeatureRequests.Model.Entity;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -19,5 +20,6 @@ namespace MKS.Web.Data.FeatureRequests.Model.View
         public string CreatedByName { get; set; }
         public string CreatedById { get; set; }
         public DateTime CreatedAt { get; set; } //local time
+        public VoteType? CurrentUserVote { get; set; }
     }
 }

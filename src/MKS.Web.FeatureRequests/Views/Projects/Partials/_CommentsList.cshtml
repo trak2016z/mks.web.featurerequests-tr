@@ -1,8 +1,22 @@
-﻿<div class="row">
+﻿@using MKS.Web.Data.FeatureRequests.Model.Entity
+@* expects comments observableArray *@
+
+<div class="row">
     <div class="col-sm-12">
         <ul class="list-group col-sm-12" data-bind="foreach: comments">
             <li class="list-group-item">
-                <h4 class="list-group-item-heading" data-bind="text: createdByName"></h4>
+                <h4 class="list-group-item-heading">
+                    <span data-bind="text: createdByName"></span>
+                    <span class="pull-right">
+                        <button class="btn btn-xs btn-danger" data-bind="click: $root.downvoteComment, enable: $data.currentUserVote() == null || $data.currentUserVote() === @((int)VoteType.Up)">
+                            <span class="glyphicon glyphicon-remove"></span>
+                        </button>
+                        <span class="badge badge-votes" data-bind="text: 'Votes: ' + votes()"></span>
+                        <button class="btn btn-xs btn-success" data-bind="click: $root.upvoteComment, enable: $data.currentUserVote() == null || $data.currentUserVote() === @((int)VoteType.Down)">
+                            <span class="glyphicon glyphicon-ok"></span>
+                        </button>
+                    </span>
+                </h4>
                 <span data-bind="text: moment(createdAt).format('YYYY-MM-DD HH:mm')"></span>
 
                 <p class="list-group-item-text" data-bind="text: content"></p>
@@ -13,6 +27,7 @@
 
 <script>
     var initCommentsListPartial = function (parentViewModel) {
-
+        //array
+        var viewModel = parentViewModel.comments;
     };
 </script>

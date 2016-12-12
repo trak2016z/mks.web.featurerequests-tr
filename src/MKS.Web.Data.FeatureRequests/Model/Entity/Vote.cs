@@ -1,4 +1,5 @@
-﻿using MKS.Web.Data.FeatureRequests.Model.Interfaces;
+﻿using MKS.Web.Data.FeatureRequests.Model.Entity;
+using MKS.Web.Data.FeatureRequests.Model.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -15,5 +16,6 @@ namespace MKS.Web.Data.FeatureRequests.Model
         [Required]
         public string CreatedById { get; set; }
         public DateTime CreatedAtUtc { get; set; }
+        public VoteType Type { get; set; }
     }
 }

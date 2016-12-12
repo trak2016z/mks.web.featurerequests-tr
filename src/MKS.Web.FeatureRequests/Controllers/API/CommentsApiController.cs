@@ -32,7 +32,7 @@ namespace MKS.Web.FeatureRequests.Controllers.API
         [Route("request/{requestId}")]
         public IActionResult GetByRequest([FromRoute]long requestId)
         {
-            var entities = _comments.GetByFeatureRequest(requestId, new DataRequest<Data.FeatureRequests.Model.View.CommentView>()
+            var entities = _comments.GetByFeatureRequest(requestId, User.GetUserId(), new DataRequest<Data.FeatureRequests.Model.View.CommentView>()
             {
                 PageSize = int.MaxValue,
                 OrderBy = c => c.CreatedAt,
@@ -48,7 +48,7 @@ namespace MKS.Web.FeatureRequests.Controllers.API
         [Route("request/{requestId}")]
         public IActionResult GetByRequest([FromRoute]long requestId, [FromBody]DataRequestModel query)
         {
-            var entities = _comments.GetByFeatureRequest(requestId, query.ToDataRequest<BM.View.CommentView>());
+            var entities = _comments.GetByFeatureRequest(requestId, User.GetUserId(), query.ToDataRequest<BM.View.CommentView>());
             var viewModels = Mapper.Map<List<VM.CommentView>>(entities);
             return Ok(viewModels);
         }

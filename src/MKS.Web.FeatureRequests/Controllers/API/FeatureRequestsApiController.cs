@@ -11,6 +11,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using MKS.Web.Common.Extensions;
 using MKS.Web.FeatureRequests.Model.Project;
+using System.ComponentModel.DataAnnotations;
 
 namespace MKS.Web.FeatureRequests.Controllers.API
 {
@@ -68,9 +69,16 @@ namespace MKS.Web.FeatureRequests.Controllers.API
 
         [HttpPost]
         [Route("isnameavailable")]
-        public IActionResult IsNameAvailable([FromBody]string name)
+        public IActionResult IsNameAvailable([FromBody][MinLength(3)]string name)
         {
-            return Ok(_featureRequests.IsNameAvailable(name));
+            if(ModelState.IsValid)
+            {
+                return Ok(_featureRequests.IsNameAvailable(name));
+            }
+            else
+            {
+                return BadRequestValidationErrors();
+            }
         }
     }
 }

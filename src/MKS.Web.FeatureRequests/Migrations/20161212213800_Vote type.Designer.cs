@@ -9,9 +9,10 @@ using MKS.Web.Data.FeatureRequests.Model.Entity;
 namespace MKS.Web.FeatureRequests.Migrations
 {
     [DbContext(typeof(FeatureRequestsDbContext))]
-    partial class FeatureRequestsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20161212213800_Vote type")]
+    partial class Votetype
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn)

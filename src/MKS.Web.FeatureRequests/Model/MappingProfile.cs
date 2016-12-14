@@ -20,6 +20,9 @@ namespace MKS.Web.FeatureRequests.Model
             CreateMap<BM.FeatureRequest, VM.Project.FeatureRequestView>()
                 .ForMember(vm => vm.Comments, o => o.Ignore());
 
+            CreateMap<BM.View.FeatureRequestView, VM.Project.FeatureRequestView>()
+                .ForMember(vm => vm.Comments, o => o.Ignore());
+
             CreateMap<BM.Project, VM.Project.ProjectListItem>()
                 .ForMember(vm => vm.CreatedAt, o => o.MapFrom(m => m.CreatedAtUtc.ToLocalTime()));
 

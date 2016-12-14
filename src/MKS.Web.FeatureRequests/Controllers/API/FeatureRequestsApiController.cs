@@ -32,7 +32,7 @@ namespace MKS.Web.FeatureRequests.Controllers.API
         [Route("{projectId}")]
         public IActionResult GetByProject(long projectId)
         {
-            var entities = _featureRequests.GetByProjectId(projectId);
+            var entities = _featureRequests.GetViewByProjectId(User.GetUserId(), projectId);
             return base.Ok(Mapper.Map<List<FeatureRequestView>>(entities));
         }
 

@@ -1,4 +1,6 @@
-﻿@model MKS.Web.FeatureRequests.Model.Project.ProjectView
+﻿@using MKS.Web.Common
+@using MKS.Web.Data.FeatureRequests.Model.Entity
+@model MKS.Web.FeatureRequests.Model.Project.ProjectView
 
 @{ 
     ViewBag.Title = "Project feature requests";
@@ -38,7 +40,15 @@
                            data-bind="attr: {'href': '#request-collapse-' + $index() }" 
                            href="#">
                             <span data-bind="text: name"></span>
-                            <span class="badge" data-bind="text: votes"></span>
+                            <span class="pull-right">
+                                <button class="btn btn-xs btn-danger" data-bind="click: $root.downvoteRequest, visible: canDownvote">
+                                    <span class="glyphicon glyphicon-remove"></span>
+                                </button>
+                                <span class="badge badge-votes" data-bind="text: 'Votes: ' + votes()"></span>
+                                <button class="btn btn-xs btn-success" data-bind="click: $root.upvoteRequest, visible: canUpvote ">
+                                    <span class="glyphicon glyphicon-ok"></span>
+                                </button>
+                            </span>
                         </a>
                     </h4>
                 </div>
@@ -144,6 +154,28 @@
         viewModel.downvoteComment = function(comment) {
             MKS.Knockout.post('/api/votes/comment/' + comment.id + '/down', null, function() {
                 viewModel.refreshCommentVotes(comment);
+            });
+        }
+
+        viewModel.refreshRequestVotes = function(request) {
+            $.getJSON(
+                '/api/votes/featurerequest/' + request.id,
+                function (data) {
+                    request.votes(data.votes);
+                    request.currentUserVote(data.currentUserVote)
+                }
+            );
+        }
+
+        viewModel.upvoteRequest = function(request) {
+            MKS.Knockout.post('/api/votes/featurerequest/' + request.id + '/up', null, function() {
+                viewModel.refreshRequestVotes(request);
+            });
+        }
+
+        viewModel.downvoteRequest = function(featurerequest) {
+            MKS.Knockout.post('/api/votes/featurerequest/' + request.id + '/down', null, function() {
+                viewModel.refreshRequestVotes(request);
             });
         }
 

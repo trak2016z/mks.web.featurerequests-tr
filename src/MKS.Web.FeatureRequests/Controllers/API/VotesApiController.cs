@@ -24,6 +24,7 @@ namespace MKS.Web.FeatureRequests.Controllers.API
             _featureRequests = featureRequests;
         }
 
+        #region Comments
         [HttpPost]
         [Route("comment/{commentId}/{direction}")]
         public IActionResult VoteComment(long commentId, string direction)
@@ -50,7 +51,7 @@ namespace MKS.Web.FeatureRequests.Controllers.API
             }
 
             return Ok();
-        } 
+        }
 
         [HttpGet]
         [Route("comment/{commentId}")]
@@ -60,7 +61,7 @@ namespace MKS.Web.FeatureRequests.Controllers.API
             {
                 var voteData = _comments.GetVotesAndCurrentUserVote(commentId, User.GetUserId());
 
-                return Ok(voteData != null ? new CommentVotes()
+                return Ok(voteData != null ? new CommonVotes()
                 {
                     Votes = voteData.Item1,
                     CurrentUserVote = voteData.Item2
@@ -71,5 +72,56 @@ namespace MKS.Web.FeatureRequests.Controllers.API
                 return BadRequest();
             }
         }
+        #endregion
+
+        #region FeatureRequests
+        [HttpPost]
+        [Route("featurerequest/{requestId}/{direction}")]
+        public IActionResult VoteFeatureRequest(long requestId, string direction)
+        {
+            direction = direction.ToLower();
+            try
+            {
+                switch (direction)
+                {
+                    case "up":
+                        _featureRequests.Upvote(User.GetUserId(), requestId);
+                        break;
+                    case "down":
+                        _featureRequests.Downvote(User.GetUserId(), requestId);
+                        break;
+                    default:
+                        return BadRequest();
+                }
+            }
+            catch (BusinessException ex)
+            {
+                //vote duplicate
+                return BadRequest();
+            }
+
+            return Ok();
+        }
+
+        [HttpGet]
+        [Route("featurerequest/{requestId}")]
+        public IActionResult GetFeatureRequestVotes(long requestId)
+        {
+            try
+            {
+                var voteData = _featureRequests.GetVotesAndCurrentUserVote(requestId, User.GetUserId());
+
+                return Ok(voteData != null ? new CommonVotes()
+                {
+                    Votes = voteData.Item1,
+                    CurrentUserVote = voteData.Item2
+                } : null);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+        }
+        #endregion
     }
 }

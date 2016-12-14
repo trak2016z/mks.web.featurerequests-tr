@@ -6,9 +6,16 @@ using System.Threading.Tasks;
 
 namespace MKS.Web.FeatureRequests.Model.Project
 {
-    public class CommentVotes
+    /// <summary>
+    /// Common votes info
+    /// </summary>
+    public class CommonVotes
     {
         public int Votes { get; set; }
+
+        /// <summary>
+        /// How did current user vote
+        /// </summary>
         public VoteType? CurrentUserVote { get; set; }
     }
 }

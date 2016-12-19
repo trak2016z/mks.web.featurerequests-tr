@@ -114,7 +114,9 @@ namespace MKS.Web.FeatureRequests.Controllers.API
                 return Ok(voteData != null ? new CommonVotes()
                 {
                     Votes = voteData.Item1,
-                    CurrentUserVote = voteData.Item2
+                    CurrentUserVote = voteData.Item2,
+                    CanUpvote = voteData.Item2 == null || voteData.Item2 == Data.FeatureRequests.Model.Entity.VoteType.Down,
+                    CanDownvote = voteData.Item2 == null || voteData.Item2 == Data.FeatureRequests.Model.Entity.VoteType.Up
                 } : null);
             }
             catch (Exception ex)

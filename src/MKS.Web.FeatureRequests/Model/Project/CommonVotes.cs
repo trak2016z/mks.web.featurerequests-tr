@@ -17,5 +17,8 @@ namespace MKS.Web.FeatureRequests.Model.Project
         /// How did current user vote
         /// </summary>
         public VoteType? CurrentUserVote { get; set; }
+
+        public bool CanUpvote { get; set; }
+        public bool CanDownvote { get; set; }
     }
 }

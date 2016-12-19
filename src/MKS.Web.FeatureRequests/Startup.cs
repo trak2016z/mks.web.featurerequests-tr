@@ -106,7 +106,7 @@ namespace MKS.Web.FeatureRequests
                 ClientId = "MKS.Web.MVC.FeatureRequests",
                 SaveTokens = true,
                 GetClaimsFromUserInfoEndpoint = true,
-
+                
                 Scope = { "openid", "profile", "roles" },
 
                 TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters()
@@ -148,6 +148,7 @@ namespace MKS.Web.FeatureRequests
 
         private static async Task OnTokenValidated(IServiceProvider serviceProvider, TokenValidatedContext context)
         {
+            //TODO: google & givenname
             using (var serviceScope = serviceProvider.GetService<IServiceScopeFactory>().CreateScope())
             {
                 var userRepository = serviceScope.ServiceProvider.GetRequiredService<UserRepository>();

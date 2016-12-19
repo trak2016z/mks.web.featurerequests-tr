@@ -140,7 +140,7 @@
                 '/api/votes/comment/' + comment.id,
                 function (data) {
                     comment.votes(data.votes);
-                    comment.currentUserVote(data.currentUserVote)
+                    comment.currentUserVote(data.currentUserVote);
                 }
             );
         }
@@ -159,22 +159,24 @@
 
         viewModel.refreshRequestVotes = function(request) {
             $.getJSON(
-                '/api/votes/featurerequest/' + request.id,
+                '/api/votes/featurerequest/' + request.id(),
                 function (data) {
                     request.votes(data.votes);
-                    request.currentUserVote(data.currentUserVote)
+                    request.currentUserVote(data.currentUserVote);
+                    request.canUpvote(data.canUpvote);
+                    request.canDownvote(data.canDownvote);
                 }
             );
         }
 
         viewModel.upvoteRequest = function(request) {
-            MKS.Knockout.post('/api/votes/featurerequest/' + request.id + '/up', null, function() {
+            MKS.Knockout.post('/api/votes/featurerequest/' + request.id() + '/up', null, function() {
                 viewModel.refreshRequestVotes(request);
             });
         }
 
-        viewModel.downvoteRequest = function(featurerequest) {
-            MKS.Knockout.post('/api/votes/featurerequest/' + request.id + '/down', null, function() {
+        viewModel.downvoteRequest = function(request) {
+            MKS.Knockout.post('/api/votes/featurerequest/' + request.id() + '/down', null, function() {
                 viewModel.refreshRequestVotes(request);
             });
         }

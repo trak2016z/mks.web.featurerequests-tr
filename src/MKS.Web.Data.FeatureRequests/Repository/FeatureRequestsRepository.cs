@@ -26,6 +26,7 @@ namespace MKS.Web.Data.FeatureRequests.Repository
             var q = (from request in _db.FeatureRequests.Where(c => c.ProjectId == projectId)
                      from user in _db.Users.Where(u => u.Id == request.CreatedById)
                      from vote in _db.Votes.Where(v => v.FeatureRequestId == request.Id && v.CreatedById == currentUserId).DefaultIfEmpty()
+                     orderby request.Votes descending
                      select new Model.View.FeatureRequestView()
                      {
                          Id = request.Id,

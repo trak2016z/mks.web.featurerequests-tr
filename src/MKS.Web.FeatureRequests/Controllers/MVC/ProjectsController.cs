@@ -106,7 +106,7 @@ namespace MKS.Web.FeatureRequests.Controllers.MVC
                 return NotFound();
 
             var viewModel = Mapper.Map<ProjectView>(project);
-            viewModel.FeatureRequests = Mapper.Map<List<FeatureRequestView>>(_featureRequests.GetByProjectId(id));
+            viewModel.FeatureRequests = Mapper.Map<List<FeatureRequestView>>(_featureRequests.GetViewByProjectId(User.GetUserId(), id));
 
             return View(viewModel);
         }

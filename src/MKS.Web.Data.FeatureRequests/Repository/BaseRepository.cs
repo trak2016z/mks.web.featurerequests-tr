@@ -76,7 +76,7 @@ namespace MKS.Web.Data.FeatureRequests.Repository
             var entity = _db.Set<T>().SingleOrDefault(e => e.Id == id);
             if(entity != null)
             {
-                _db.Remove(entity);
+                _db.Set<T>().Remove(entity);
                 _db.SaveChanges();
             }
         }

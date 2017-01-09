@@ -16,6 +16,11 @@ namespace MKS.Web.Data.FeatureRequests
         public DbSet<Vote> Votes { get; set; }
         public DbSet<User> Users { get; set; }
 
+        public FeatureRequestsDbContext()
+        {
+
+        }
+
         /// <summary>
         /// Allows specifying provider at the application level.
         /// </summary>
